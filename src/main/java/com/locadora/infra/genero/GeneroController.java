@@ -1,5 +1,17 @@
 package com.locadora.infra.genero;
 
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,5 +23,36 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/generos")
 public class GeneroController {
-
+	
+	@Autowired
+	private GeneroService generoService;
+	
+	/**
+	 * Metodo que lista todos os {@link Genero generos} cadastrados no banco de dados
+	 * @see ResponseEntity
+	 * @return 
+	 */
+	@GetMapping
+	public ResponseEntity<List<Genero>> listarTodos(){
+		List<Genero> generos = generoService.listarTodos();
+		return ResponseEntity.status(HttpStatus.OK).body(generos);
+	}
+	
+	@GetMapping("/{nome}")
+	public ResponseEntity<Genero> listarPorNome(@PathVariable("nome") String nome){
+		Genero genero = generoService.listarPorNome(nome);
+		return ResponseEntity.status(HttpStatus.OK).body(genero);
+	}
+	
+	/**
+	 * Metodo responsavel por criar um {@link Genero} e salvar no banco
+	 * @param genero
+	 * @return
+	 */
+	@PostMapping
+	public ResponseEntity<Genero> criar(@Valid @RequestBody Genero genero){
+		Genero generoSalvo = generoService.criar(genero);
+		return ResponseEntity.status(HttpStatus.CREATED).body(generoSalvo);
+	}
+	
 }
