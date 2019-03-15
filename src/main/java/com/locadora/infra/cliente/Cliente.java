@@ -52,10 +52,9 @@ public class Cliente {
 	
 	
 
-	public Cliente(@CPF String cpf, @NotNull @Size(min = 3, max = 150) String nome,
-			@NotNull @Size(min = 8, max = 150) String rua, @NotNull String cep,
-			@NotNull @Size(min = 4, max = 150) String bairro, @Size(min = 3, max = 150) String complemento,
-			@NotNull @Size(min = 3, max = 50) String cidade) {
+	public Cliente( String cpf,  String nome,
+			 String rua,  String cep, String bairro, String complemento,
+			 String cidade) {
 		super();
 		this.cpf = cpf;
 		this.nome = nome;

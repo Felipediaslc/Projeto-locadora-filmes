@@ -1,17 +1,24 @@
 package com.locadora.infra.locacao;
 
 import java.sql.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.locadora.infra.cliente.Cliente;
+import com.locadora.infra.filme.Filme;
+
 
 @Entity
 @Table(name="LOCACAO")
@@ -33,7 +40,9 @@ public class Locacao {
 	@JoinColumn(name="CLIENTE_ID")
 	private Cliente cliente;
 	
-	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name="LOCACAO_TEM_FILME", joinColumns = @JoinColumn(name="LOCACAO_ID"), inverseJoinColumns = @JoinColumn(name = "FILME_ID"))
+	private List<Filme> filmes;
 
 	public Locacao(Date dataRealizacao, Date dataDevolucao, Double valorTotal, Cliente cliente) {
 		super();
