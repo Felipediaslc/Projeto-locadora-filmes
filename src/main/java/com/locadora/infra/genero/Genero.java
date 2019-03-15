@@ -8,6 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Classe Modelo de genero para manipulacao do banco de dados
+ * @author SOUSA, Taynar - Marco/2019
+ * @since 1.0
+ */
 @Entity
 @Table(name = "GENERO")
 public class Genero {

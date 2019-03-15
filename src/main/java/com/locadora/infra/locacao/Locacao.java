@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,15 +16,33 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+
 
 import com.locadora.infra.cliente.Cliente;
+import com.locadora.infra.enums.StatusLocacao;
 import com.locadora.infra.filme.Filme;
 
-
+/**
+ * Classe Modelo de Locacao para manipulacao no banco de dados
+ * @author SOUSA, Taynar - Marco/2019
+ * @since 1.0
+ */
 @Entity
 @Table(name="LOCACAO")
 public class Locacao {
+	public List<Filme> getFilmes() {
+		return filmes;
+	}
+	public void setFilmes(List<Filme> filmes) {
+		this.filmes = filmes;
+	}
+	public StatusLocacao getStatusLocacao() {
+		return statusLocacao;
+	}
+	public void setStatusLocacao(StatusLocacao statusLocacao) {
+		this.statusLocacao = statusLocacao;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -43,18 +63,27 @@ public class Locacao {
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name="LOCACAO_TEM_FILME", joinColumns = @JoinColumn(name="LOCACAO_ID"), inverseJoinColumns = @JoinColumn(name = "FILME_ID"))
 	private List<Filme> filmes;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name="STATUS")
+	private StatusLocacao statusLocacao;
 
-	public Locacao(Date dataRealizacao, Date dataDevolucao, Double valorTotal, Cliente cliente) {
+	
+	public Locacao(Date dataRealizacao, Date dataDevolucao, Double valorTotal, Cliente cliente, List<Filme> filmes,
+			StatusLocacao statusLocacao) {
 		super();
 		this.dataRealizacao = dataRealizacao;
 		this.dataDevolucao = dataDevolucao;
 		this.valorTotal = valorTotal;
 		this.cliente = cliente;
+		this.filmes = filmes;
+		this.statusLocacao = statusLocacao;
 	}
 	public Locacao() {
 		
 	}
 
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -62,7 +91,9 @@ public class Locacao {
 		result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
 		result = prime * result + ((dataDevolucao == null) ? 0 : dataDevolucao.hashCode());
 		result = prime * result + ((dataRealizacao == null) ? 0 : dataRealizacao.hashCode());
+		result = prime * result + ((filmes == null) ? 0 : filmes.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((statusLocacao == null) ? 0 : statusLocacao.hashCode());
 		result = prime * result + ((valorTotal == null) ? 0 : valorTotal.hashCode());
 		return result;
 	}
@@ -93,11 +124,19 @@ public class Locacao {
 		}
 		else if (!dataRealizacao.equals(other.dataRealizacao))
 			return false;
+		if (filmes == null) {
+			if (other.filmes != null)
+				return false;
+		}
+		else if (!filmes.equals(other.filmes))
+			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		}
 		else if (!id.equals(other.id))
+			return false;
+		if (statusLocacao != other.statusLocacao)
 			return false;
 		if (valorTotal == null) {
 			if (other.valorTotal != null)

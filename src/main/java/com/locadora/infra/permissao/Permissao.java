@@ -8,6 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Classe Modelo de permissoes para manipulacao no banco de dados
+ * @author taynar
+ *
+ */
 @Entity
 @Table(name="PERMISSAO")
 public class Permissao {

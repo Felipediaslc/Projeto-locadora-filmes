@@ -18,7 +18,11 @@ import javax.validation.constraints.Size;
 import com.locadora.infra.permissao.Permissao;
 
 
-
+/**
+ * Classe Modelo de perfil para manipulacao no banco de dados
+ * @author SOUSA, Taynar
+ * @since 1.0
+ */
 @Entity
 @Table(name = "PERFIL")
 public class Perfil {

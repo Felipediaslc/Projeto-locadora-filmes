@@ -11,6 +11,13 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.br.CPF;
 
+/**
+ * Classe Modelo de clientes para manipulação do banco de dados.
+ * 
+ * @author SOUSA, Taynar Marco/2019
+ * @since 1.0
+ */
+
 @Entity
 @Table(name="CLIENTE")
 public class Cliente {

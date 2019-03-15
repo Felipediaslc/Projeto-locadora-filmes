@@ -13,7 +13,11 @@ import javax.validation.constraints.Size;
 
 import com.locadora.infra.genero.Genero;
 
-
+/**
+ * Classe Modelo de filme para manipulação do banco de dados
+ * @author SOUSA,Taynar - Marco/2019
+ * @since 1.0
+ */
 @Entity
 @Table(name="FILME")
 public class Filme {

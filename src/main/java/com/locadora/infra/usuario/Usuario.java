@@ -11,6 +11,12 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.locadora.infra.perfil.Perfil;
+
+/**
+ * Classe modelo de usuario para manipulacao do banco de dados
+ * @author SOUSA, Taynar - Marco/2019
+ * @since 1.0
+ */
 @Entity
 @Table(name="USUARIO")
 public class Usuario {
