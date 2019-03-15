@@ -1,0 +1,19 @@
+server:
+  port: 8000
+spring:
+  datasource:
+    password: root
+    url: jdbc:mysql://localhost:3306/locadora-filmes?useSSL=false
+    username: root
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  jpa:
+    database: MYSQL
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
