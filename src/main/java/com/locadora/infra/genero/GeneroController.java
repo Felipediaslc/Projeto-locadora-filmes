@@ -40,7 +40,7 @@ public class GeneroController {
 	
 	@GetMapping("/{nome}")
 	public ResponseEntity<Genero> listarPorNome(@PathVariable("nome") String nome){
-		Genero genero = generoService.listarPorNome(nome);
+		Genero genero = generoService.buscarPorNome(nome);
 		return ResponseEntity.status(HttpStatus.OK).body(genero);
 	}
 	
@@ -53,6 +53,18 @@ public class GeneroController {
 	public ResponseEntity<Genero> criar(@Valid @RequestBody Genero genero){
 		Genero generoSalvo = generoService.criar(genero);
 		return ResponseEntity.status(HttpStatus.CREATED).body(generoSalvo);
+	}
+	
+	/**
+	 * Metodo responsavel por atualizar um {@link Genero}
+	 * @param nome
+	 * @param genero
+	 * @return
+	 */
+	@PutMapping("/{nome}")
+	public ResponseEntity<Genero> criar(@PathVariable("nome") String nome,@Valid @RequestBody Genero genero){
+		Genero generoSalvo = generoService.atualizar(nome,genero);
+		return ResponseEntity.status(HttpStatus.OK).body(generoSalvo);
 	}
 	
 }

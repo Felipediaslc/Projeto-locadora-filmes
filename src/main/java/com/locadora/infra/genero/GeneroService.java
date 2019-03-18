@@ -3,8 +3,12 @@ package com.locadora.infra.genero;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.locadora.infra.genero.exception.GeneroDuplicadoException;
+import com.locadora.infra.genero.exception.GeneroNaoEncontradoException;
 /**
  * Classe responsavel pela regra de negocios atribuidos a {@link Genero}
  * @author SOUSA, Taynar
@@ -25,8 +29,11 @@ public class GeneroService {
 		return generoRepository.findAll();
 	}
 	
-	public Genero listarPorNome(String nome) {
+	public Genero buscarPorNome(String nome) {
 		Optional<Genero> generoASerBuscado = generoRepository.findByNome(nome);
+		if(!generoASerBuscado.isPresent()) {
+			throw new GeneroNaoEncontradoException();
+		}
 		return generoASerBuscado.get();
 	}
 	
@@ -37,9 +44,32 @@ public class GeneroService {
 	 * @return
 	 */
 	public Genero criar(Genero genero) {
-		Genero generoSalvo = generoRepository.save(genero);
-		return generoSalvo;
+		Optional<Genero> generoSalvo = generoRepository.findByNome(genero.getNome());
+		if(generoSalvo.isPresent()) {
+			throw new GeneroDuplicadoException();
+		}
+		generoRepository.save(generoSalvo.get());
+		return generoSalvo.get();
 	}
 	
-
+	/**
+	 * Metodo que atualiza um {@link Genero}
+	 * @param nomeantigo
+	 * @param genero
+	 * @return Genero atualizado
+	 */
+	public Genero atualizar(String nomeantigo, Genero genero) {
+		
+		Optional<Genero> generoAAtualizar = generoRepository.findByNome(genero.getNome());
+		if(generoAAtualizar.isPresent()) {
+			throw new GeneroDuplicadoException();
+		}
+		
+		Genero generoCadastrado = buscarPorNome(nomeantigo);
+		BeanUtils.copyProperties(genero, generoCadastrado, "id");
+		
+		return generoRepository.save(generoCadastrado);
+		
+	}
+	
 }
