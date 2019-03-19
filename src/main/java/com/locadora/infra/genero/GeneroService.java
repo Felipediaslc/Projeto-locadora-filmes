@@ -30,10 +30,11 @@ public class GeneroService {
 	}
 	
 	public Genero buscarPorNome(String nome) {
-		Optional<Genero> generoASerBuscado = generoRepository.findByNome(nome);
-		if(!generoASerBuscado.isPresent()) {
+		
+		if(!generoExiste(nome)) {
 			throw new GeneroNaoEncontradoException();
 		}
+		Optional<Genero> generoASerBuscado = generoRepository.findByNome(nome);
 		return generoASerBuscado.get();
 	}
 	
@@ -44,12 +45,12 @@ public class GeneroService {
 	 * @return
 	 */
 	public Genero criar(Genero genero) {
-		Optional<Genero> generoSalvo = generoRepository.findByNome(genero.getNome());
-		if(generoSalvo.isPresent()) {
+
+		if(generoExiste(genero.getNome())) {
 			throw new GeneroDuplicadoException();
 		}
-		generoRepository.save(generoSalvo.get());
-		return generoSalvo.get();
+		generoRepository.save(genero);
+		return genero;
 	}
 	
 	/**
@@ -60,8 +61,7 @@ public class GeneroService {
 	 */
 	public Genero atualizar(String nomeantigo, Genero genero) {
 		
-		Optional<Genero> generoAAtualizar = generoRepository.findByNome(genero.getNome());
-		if(generoAAtualizar.isPresent()) {
+		if(generoExiste(genero.getNome())) {
 			throw new GeneroDuplicadoException();
 		}
 		
@@ -70,6 +70,11 @@ public class GeneroService {
 		
 		return generoRepository.save(generoCadastrado);
 		
+	}
+	
+	private boolean generoExiste(String nome) {
+		Optional<Genero> genero = generoRepository.findByNome(nome);
+		return genero.isPresent();
 	}
 	
 }

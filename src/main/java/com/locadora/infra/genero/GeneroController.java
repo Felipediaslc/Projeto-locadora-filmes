@@ -64,7 +64,7 @@ public class GeneroController {
 	@PutMapping("/{nome}")
 	public ResponseEntity<Genero> criar(@PathVariable("nome") String nome,@Valid @RequestBody Genero genero){
 		Genero generoSalvo = generoService.atualizar(nome,genero);
-		return ResponseEntity.status(HttpStatus.OK).body(generoSalvo);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(generoSalvo);
 	}
 	
 }

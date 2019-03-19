@@ -43,6 +43,10 @@ public class Filme {
 	private Integer qtEstoque;
 	
 	@NotNull
+	@Column(name = "NOME_DIRETOR")
+	private String nomeDiretor;
+	
+	@NotNull
 	@Column(name="SINOPSE")
 	private String sinopse;
 	
@@ -53,7 +57,7 @@ public class Filme {
 	
 	
 	public Filme(String titulo,  Integer duracao,  Double valorDiaria,
-			 Integer qtEstoque, String sinopse, Genero genero) {
+			 Integer qtEstoque, String sinopse, Genero genero, String nomeDiretor) {
 		super();
 		this.titulo = titulo;
 		this.duracao = duracao;
@@ -61,10 +65,21 @@ public class Filme {
 		this.qtEstoque = qtEstoque;
 		this.sinopse = sinopse;
 		this.genero = genero;
+		this.nomeDiretor = nomeDiretor;
 	}
 	
 	public Filme() {
 		
+	}
+	
+	
+	
+	public String getNomeDiretor() {
+		return nomeDiretor;
+	}
+
+	public void setNomeDiretor(String nomeDiretor) {
+		this.nomeDiretor = nomeDiretor;
 	}
 
 	public String getTitulo() {
