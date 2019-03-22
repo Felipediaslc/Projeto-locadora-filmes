@@ -33,6 +33,7 @@ public class FilmeController {
 	 * Metodo que  retorna no body todos os {@link Filme filmes} cadastrados
 	 * @see FilmeService
 	 * @return {@link HttpStatus.OK} com  a lista de {@link Filme filmes} no body
+	 * @since 1.0
 	 */
 	@GetMapping
 	public ResponseEntity<List<Filme>> listarTodos(){
@@ -44,6 +45,7 @@ public class FilmeController {
 	 * @see FilmeService
 	 * @param titulo
 	 * @return {@link HttpStatus.OK} com o {@link Filme} no body
+	 * @since 1.0
 	 */
 	@GetMapping("/{titulo}")
 	public ResponseEntity<Filme> buscarPorTitulo(@PathVariable("titulo") String titulo){
@@ -57,6 +59,7 @@ public class FilmeController {
 	 * @see FilmeService
 	 * @param genero
 	 * @return {@link HttpStatus.OK} com a lista de {@link Filme filmes} daquele {@link Genero} no body
+	 * @since 1.0
 	 */
 	@GetMapping("/genero/{genero}")
 	public ResponseEntity<List<Filme>> buscarPorGenero(@PathVariable("genero") String genero){
@@ -70,6 +73,7 @@ public class FilmeController {
 	 * @see FilmeRepository
 	 * @param filme
 	 * @return {@link HttpStatus.CREATED} com o {@link Filme} criado no body
+	 * @since 1.0
 	 */
 	@PostMapping
 	public ResponseEntity<Filme> criar(@Valid @RequestBody Filme filme){
@@ -83,6 +87,7 @@ public class FilmeController {
 	 * @param titulo
 	 * @param filme
 	 * @return {@link HttpStatus.NO_CONTENT} 
+	 * @since 1.0
 	 */
 	@PutMapping
 	public ResponseEntity<Filme> atualizar(@PathVariable String titulo, @Valid @RequestBody Filme filme){
@@ -96,6 +101,7 @@ public class FilmeController {
 	 * @param titulo
 	 * @param qtEstoque
 	 * @return {@link HttpStatus.NO_CONTENT} 
+	 * @since 1.0
 	 */
 	@PutMapping("/qtEstoque/{titulo}")
 	public ResponseEntity<Filme> atualizarQtEstoque(@PathVariable String titulo, @Valid @RequestBody int qtEstoque){
@@ -108,7 +114,8 @@ public class FilmeController {
 	 * @see FilmeRepository
 	 * @param titulo
 	 * @param valorDiaria
-	 * @return {@link HttpStatus.NO_CONTENT} 
+	 * @return {@link HttpStatus.NO_CONTENT}
+	 * @since 1.0 
 	 */
 	@PutMapping("/valorDiaria/{titulo}")
 	public ResponseEntity<Filme> atualizarValorDiaria(@PathVariable String titulo, @Valid @RequestBody double valorDiaria){
