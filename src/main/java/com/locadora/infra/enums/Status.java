@@ -4,6 +4,6 @@ package com.locadora.infra.enums;
  * @author SOUSA, Taynar - Marco/2019
  * @since 1.0
  */
-public enum StatusLocacao {
- ABERTO,DEVOLVIDO
+public enum Status {
+		ABERTO,DEVOLVIDO
 }

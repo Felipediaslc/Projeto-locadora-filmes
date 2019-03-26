@@ -1,89 +1,70 @@
 package com.locadora.infra.locacao;
 
-import java.sql.Date;
-import java.util.List;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-
 import com.locadora.infra.cliente.Cliente;
-import com.locadora.infra.enums.StatusLocacao;
-import com.locadora.infra.filme.Filme;
+import com.locadora.infra.enums.Status;
+
 
 /**
  * Classe Modelo de Locacao para manipulacao no banco de dados
+ * 
  * @author SOUSA, Taynar - Marco/2019
  * @since 1.0
  */
 @Entity
-@Table(name="LOCACAO")
+@Table(name = "locacao")
 public class Locacao {
-	public List<Filme> getFilmes() {
-		return filmes;
-	}
-	public void setFilmes(List<Filme> filmes) {
-		this.filmes = filmes;
-	}
-	public StatusLocacao getStatusLocacao() {
-		return statusLocacao;
-	}
-	public void setStatusLocacao(StatusLocacao statusLocacao) {
-		this.statusLocacao = statusLocacao;
-	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	@Column(name = "DATA_REALIZACAO")
-	private Date dataRealizacao;
-	
+	private LocalDate dataRealizacao;
+
 	@Column(name = "DATA_DEVOLUCAO")
-	private Date dataDevolucao;
-	
+	private LocalDate dataDevolucao;
+
 	@Column(name = "VALOR_TOTAL")
 	private Double valorTotal;
-	
+
 	@ManyToOne
-	@JoinColumn(name="CLIENTE_ID")
+	@JoinColumn(name = "CLIENTE_ID")
 	private Cliente cliente;
-	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name="LOCACAO_TEM_FILME", joinColumns = @JoinColumn(name="LOCACAO_ID"), inverseJoinColumns = @JoinColumn(name = "FILME_ID"))
-	private List<Filme> filmes;
-	
+
 	@Enumerated(EnumType.STRING)
-	@Column(name="STATUS")
-	private StatusLocacao statusLocacao;
+	@Column(name = "STATUS")
+	private Status status;
 
 	
-	public Locacao(Date dataRealizacao, Date dataDevolucao, Double valorTotal, Cliente cliente, List<Filme> filmes,
-			StatusLocacao statusLocacao) {
+	public Locacao(LocalDate dataRealizacao, LocalDate dataDevolucao, Double valorTotal, Cliente cliente,
+			Status status) {
 		super();
 		this.dataRealizacao = dataRealizacao;
 		this.dataDevolucao = dataDevolucao;
 		this.valorTotal = valorTotal;
 		this.cliente = cliente;
-		this.filmes = filmes;
-		this.statusLocacao = statusLocacao;
+		this.status = status;
 	}
+
 	public Locacao() {
-		
+
 	}
 
 	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -91,12 +72,12 @@ public class Locacao {
 		result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
 		result = prime * result + ((dataDevolucao == null) ? 0 : dataDevolucao.hashCode());
 		result = prime * result + ((dataRealizacao == null) ? 0 : dataRealizacao.hashCode());
-		result = prime * result + ((filmes == null) ? 0 : filmes.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((statusLocacao == null) ? 0 : statusLocacao.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + ((valorTotal == null) ? 0 : valorTotal.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -109,44 +90,33 @@ public class Locacao {
 		if (cliente == null) {
 			if (other.cliente != null)
 				return false;
-		}
-		else if (!cliente.equals(other.cliente))
+		} else if (!cliente.equals(other.cliente))
 			return false;
 		if (dataDevolucao == null) {
 			if (other.dataDevolucao != null)
 				return false;
-		}
-		else if (!dataDevolucao.equals(other.dataDevolucao))
+		} else if (!dataDevolucao.equals(other.dataDevolucao))
 			return false;
 		if (dataRealizacao == null) {
 			if (other.dataRealizacao != null)
 				return false;
-		}
-		else if (!dataRealizacao.equals(other.dataRealizacao))
-			return false;
-		if (filmes == null) {
-			if (other.filmes != null)
-				return false;
-		}
-		else if (!filmes.equals(other.filmes))
+		} else if (!dataRealizacao.equals(other.dataRealizacao))
 			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
-		}
-		else if (!id.equals(other.id))
+		} else if (!id.equals(other.id))
 			return false;
-		if (statusLocacao != other.statusLocacao)
+		if (status != other.status)
 			return false;
 		if (valorTotal == null) {
 			if (other.valorTotal != null)
 				return false;
-		}
-		else if (!valorTotal.equals(other.valorTotal))
+		} else if (!valorTotal.equals(other.valorTotal))
 			return false;
 		return true;
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -155,19 +125,19 @@ public class Locacao {
 		this.id = id;
 	}
 
-	public Date getDataRealizacao() {
+	public LocalDate getDataRealizacao() {
 		return dataRealizacao;
 	}
 
-	public void setDataRealizacao(Date dataRealizacao) {
+	public void setDataRealizacao(LocalDate dataRealizacao) {
 		this.dataRealizacao = dataRealizacao;
 	}
 
-	public Date getDataDevolucao() {
+	public LocalDate getDataDevolucao() {
 		return dataDevolucao;
 	}
 
-	public void setDataDevolucao(Date dataDevolucao) {
+	public void setDataDevolucao(LocalDate dataDevolucao) {
 		this.dataDevolucao = dataDevolucao;
 	}
 
@@ -186,6 +156,13 @@ public class Locacao {
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
-	
-	
+
+	public Status getstatus() {
+		return status;
+	}
+
+	public void setstatus(Status status) {
+		this.status = status;
+	}
+
 }

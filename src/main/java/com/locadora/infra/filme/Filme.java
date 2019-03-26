@@ -21,6 +21,7 @@ import com.locadora.infra.genero.Genero;
 @Entity
 @Table(name="FILME")
 public class Filme {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -74,6 +75,14 @@ public class Filme {
 	
 	
 	
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public String getNomeDiretor() {
 		return nomeDiretor;
 	}

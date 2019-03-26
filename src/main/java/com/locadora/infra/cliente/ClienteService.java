@@ -88,7 +88,7 @@ public class ClienteService {
 	 * Metodo responsavel por verificar se cpf ja existe.
 	 * 
 	 * @param cpf
-	 * @return true se existeir; false se não existir
+	 * @return true se existir; false se não existir
 	 * @since 1.0
 	 */
 	private boolean cpfExiste(String cpf) {
