@@ -1,4 +1,4 @@
-package com.locadora.infra.locacao;
+package com.locadora.infra.locacaoTemFilme;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.locadora.infra.filme.Filme;
 import com.locadora.infra.filme.FilmeService;
+import com.locadora.infra.locacao.Locacao;
 
 @Service
 public class LocacaoTemFilmeService {

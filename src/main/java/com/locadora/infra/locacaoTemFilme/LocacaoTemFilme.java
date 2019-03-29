@@ -1,4 +1,4 @@
-package com.locadora.infra.locacao;
+package com.locadora.infra.locacaoTemFilme;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.locadora.infra.filme.Filme;
+import com.locadora.infra.locacao.Locacao;
 
 @Entity
 @Table(name = "locacao_tem_filme")

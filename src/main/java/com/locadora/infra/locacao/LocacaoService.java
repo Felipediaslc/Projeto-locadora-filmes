@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import com.locadora.infra.cliente.Cliente;
 import com.locadora.infra.cliente.ClienteService;
 import com.locadora.infra.enums.StatusLocacao;
+import com.locadora.infra.locacaoTemFilme.LocacaoTemFilme;
+import com.locadora.infra.locacaoTemFilme.LocacaoTemFilmeService;
 
 /**
  * Classe responsável pelas regras de negocios atribuidos a {@link Locacao}
@@ -39,12 +41,22 @@ public class LocacaoService {
 	 * @param cpf
 	 * @return Lista de {@link Locacao locacoes} do {@link Cliente} informado.
 	 */
-	public List<Locacao> buscarPorCliente(String cpf) {
+	public List<Locacao> listarPorCliente(String cpf) {
 		Cliente cliente = this.clienteService.buscarPorCpf(cpf);
 		
 		List<Locacao> locacaoSalva = this.locacaoRepository.findByCliente(cliente);
 		
 		return locacaoSalva;
+	}
+	/**
+	 * Metodo responsavel por listar as {@link Locacao locacoes} pelo status.
+	 * @see LocacaoRepository
+	 * @param status
+	 * @return Lista de locacoes que possuem o status informado.
+	 */
+	public List<Locacao> listarPorStatus(StatusLocacao status){
+		List<Locacao> listaLocacoes = this.locacaoRepository.findByStatusLocacao(status);
+		return listaLocacoes;
 	}
 	/**
 	 * Metodo responsavel por buscar {@link Locacao} através do id informado.
@@ -57,16 +69,7 @@ public class LocacaoService {
 		
 		return locacao.get();
 	}
-	/**
-	 * Metodo responsavel por listar as {@link Locacao locacoes} pelo status.
-	 * @see LocacaoRepository
-	 * @param status
-	 * @return Lista de locacoes que possuem o status informado.
-	 */
-	public List<Locacao> listarPorStatus(StatusLocacao status){
-		List<Locacao> listaLocacoes = this.locacaoRepository.findByStatusLocacao(status);
-		return listaLocacoes;
-	}
+	
 	
 	public Locacao criar(Locacao locacao) {
 		List<LocacaoTemFilme> locacaoTemFilmes = locacao.getFilmes();

@@ -19,6 +19,7 @@ import javax.persistence.Table;
 
 import com.locadora.infra.cliente.Cliente;
 import com.locadora.infra.enums.StatusLocacao;
+import com.locadora.infra.locacaoTemFilme.LocacaoTemFilme;
 
 
 /**
@@ -129,15 +130,6 @@ public class Locacao {
 		} else if (!valorTotal.equals(other.valorTotal))
 			return false;
 		return true;
-	}
-
-
-
-	public StatusLocacao getStatus() {
-		return statusLocacao;
-	}
-	public void setStatus(StatusLocacao status) {
-		this.statusLocacao = status;
 	}
 
 	public List<LocacaoTemFilme> getFilmes() {

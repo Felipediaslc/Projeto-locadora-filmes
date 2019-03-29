@@ -1,4 +1,4 @@
-package com.locadora.infra.locacao;
+package com.locadora.infra.locacaoTemFilme;
 
 import java.io.Serializable;
 

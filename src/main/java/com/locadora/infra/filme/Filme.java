@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.locadora.infra.genero.Genero;
-import com.locadora.infra.locacao.LocacaoTemFilme;
+import com.locadora.infra.locacaoTemFilme.LocacaoTemFilme;
 
 /**
  * Classe Modelo de filme para manipulação do banco de dados
