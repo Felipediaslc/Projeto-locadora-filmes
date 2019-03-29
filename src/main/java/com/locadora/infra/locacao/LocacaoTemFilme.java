@@ -4,24 +4,27 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.locadora.infra.filme.Filme;
 
 @Entity
 @Table(name = "locacao_tem_filme")
+
 public class LocacaoTemFilme {
 	
 	@EmbeddedId
 	private LocacaoTemFilmeId id;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
     @MapsId("locacaoId")
     private Locacao locacao;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
     @MapsId("filmeId")
     private Filme filme;
 	
@@ -33,13 +36,13 @@ public class LocacaoTemFilme {
 
 	
 	
-	public LocacaoTemFilme(Integer id, Locacao locacao, Filme filme, Integer qtLocada, Double vlrTotal) {
+	public LocacaoTemFilme( Locacao locacao, Filme filme, Integer qtLocada) {
 		
-		this.id = new LocacaoTemFilmeId(locacao.getId(), filme.getId());
 		this.locacao = locacao;
 		this.filme = filme;
 		this.qtLocada = qtLocada;
-		this.vlrTotal = vlrTotal;
+		this.id = new LocacaoTemFilmeId(locacao.getId(), filme.getId());
+
 	}
 
 	public LocacaoTemFilme(){
@@ -55,7 +58,8 @@ public class LocacaoTemFilme {
 	public void setId(LocacaoTemFilmeId id) {
 		this.id = id;
 	}
-
+	
+	@JsonIgnore
 	public Locacao getLocacao() {
 		return locacao;
 	}
@@ -64,6 +68,7 @@ public class LocacaoTemFilme {
 		this.locacao = locacao;
 	}
 
+	
 	public Filme getFilme() {
 		return filme;
 	}

@@ -60,14 +60,13 @@ public class Filme {
 	@ManyToOne
 	@JoinColumn(name="GENERO_ID")
 	private Genero genero;
-
+	/*
 	@OneToMany(mappedBy = "locacao",cascade = CascadeType.ALL,orphanRemoval = true)
-	    private List<LocacaoTemFilme> locacoes = new ArrayList<>();
+	    private List<LocacaoTemFilme> locacoes = new ArrayList<>();*/
 	
 	
 	public Filme(String titulo,  Integer duracao,  Double valorDiaria,
-			 Integer qtEstoque,  String nomeDiretor,  String sinopse, Genero genero,
-			List<LocacaoTemFilme> locacoes) {
+			 Integer qtEstoque,  String nomeDiretor,  String sinopse, Genero genero) {
 		super();
 		this.titulo = titulo;
 		this.duracao = duracao;
@@ -76,7 +75,6 @@ public class Filme {
 		this.nomeDiretor = nomeDiretor;
 		this.sinopse = sinopse;
 		this.genero = genero;
-		this.locacoes = locacoes;
 	}
 
 
@@ -93,7 +91,6 @@ public class Filme {
 		result = prime * result + ((duracao == null) ? 0 : duracao.hashCode());
 		result = prime * result + ((genero == null) ? 0 : genero.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((locacoes == null) ? 0 : locacoes.hashCode());
 		result = prime * result + ((nomeDiretor == null) ? 0 : nomeDiretor.hashCode());
 		result = prime * result + ((qtEstoque == null) ? 0 : qtEstoque.hashCode());
 		result = prime * result + ((sinopse == null) ? 0 : sinopse.hashCode());
@@ -128,11 +125,6 @@ public class Filme {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (locacoes == null) {
-			if (other.locacoes != null)
-				return false;
-		} else if (!locacoes.equals(other.locacoes))
-			return false;
 		if (nomeDiretor == null) {
 			if (other.nomeDiretor != null)
 				return false;
@@ -159,16 +151,6 @@ public class Filme {
 		} else if (!valorDiaria.equals(other.valorDiaria))
 			return false;
 		return true;
-	}
-
-
-
-	public List<LocacaoTemFilme> getLocacoes() {
-		return locacoes;
-	}
-
-	public void setLocacoes(List<LocacaoTemFilme> locacoes) {
-		this.locacoes = locacoes;
 	}
 
 	public Integer getId() {

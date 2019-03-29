@@ -1,5 +1,6 @@
 package com.locadora.infra.locacao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,25 +12,26 @@ import com.locadora.infra.filme.FilmeService;
 @Service
 public class LocacaoTemFilmeService {
 
-	@Autowired
-	private LocacaoTemFilmeRepository locacaoTemFilmeRepository;
 	
 	@Autowired
 	private FilmeService filmeService;
 		
-	public void criar(Locacao locacao, List<LocacaoTemFilme> filmes) {
-		
+	public List<LocacaoTemFilme> criar(Locacao locacao, List<LocacaoTemFilme> filmes) {
+		LocacaoTemFilme locacaoTemFilme;
+		List<LocacaoTemFilme> listaAtualizada = new ArrayList<>();
 		for (int i =0;i<filmes.size();i++) {
 			if(i>5) {
 				System.out.println("nao pode alugar mais que 5");
 			}
+			
 			filmes.get(i).setLocacao(locacao);
 			Filme filme = this.filmeService.buscarPorId(filmes.get(i).getFilme().getId());
+			locacaoTemFilme = new LocacaoTemFilme(locacao, filme, filmes.get(i).getQtLocada());
 			 Double valor = calcularValorTotalDaDiaria(filme.getValorDiaria(), filmes.get(i).getQtLocada());
-			 filmes.get(i).setVlrTotal(valor);
-			 this.locacaoTemFilmeRepository.save(filmes.get(i));
+			locacaoTemFilme.setVlrTotal(valor);
+			listaAtualizada.add(locacaoTemFilme);
 		}
-		
+		return listaAtualizada;
 		 
 	}
 

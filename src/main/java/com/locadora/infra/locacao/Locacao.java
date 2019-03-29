@@ -192,8 +192,8 @@ public class Locacao {
 		return statusLocacao;
 	}
 
-	public void setStatusLocacao(StatusLocacao status) {
-		this.statusLocacao = status;
+	public void setStatusLocacao(StatusLocacao statusLocacao) {
+		this.statusLocacao = statusLocacao;
 	}
 
 }

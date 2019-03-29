@@ -3,7 +3,9 @@ package com.locadora.infra.locacao;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,31 +33,58 @@ public class LocacaoService {
 	public List<Locacao> listarTodos(){
 		return this.locacaoRepository.findAll();
 	}
-	
-	public Locacao buscarPorCliente(String cpf) {
+	/**
+	 * Metodo responsavel por buscar locacoes de um determinado {@link Cliente}.
+	 * @see LocacaoRepository
+	 * @param cpf
+	 * @return Lista de {@link Locacao locacoes} do {@link Cliente} informado.
+	 */
+	public List<Locacao> buscarPorCliente(String cpf) {
 		Cliente cliente = this.clienteService.buscarPorCpf(cpf);
 		
-		Locacao locacaoSalva = this.locacaoRepository.findByCliente(cliente);
+		List<Locacao> locacaoSalva = this.locacaoRepository.findByCliente(cliente);
 		
 		return locacaoSalva;
 	}
-	
-	/*public List<Locacao> listarPorStatus(StatusLocacao status){
-		List<Locacao> listaLocacoes = this.locacaoRepository.findByStatus(status);
+	/**
+	 * Metodo responsavel por buscar {@link Locacao} através do id informado.
+	 * @see LocacaoRepository
+	 * @param id
+	 * @return {@link Locacao} que possui o id informado.
+	 */
+	public Locacao buscarPorId(int id) {
+		Optional<Locacao> locacao = this.locacaoRepository.findById(id);
+		
+		return locacao.get();
+	}
+	/**
+	 * Metodo responsavel por listar as {@link Locacao locacoes} pelo status.
+	 * @see LocacaoRepository
+	 * @param status
+	 * @return Lista de locacoes que possuem o status informado.
+	 */
+	public List<Locacao> listarPorStatus(StatusLocacao status){
+		List<Locacao> listaLocacoes = this.locacaoRepository.findByStatusLocacao(status);
 		return listaLocacoes;
-	}*/
+	}
 	
 	public Locacao criar(Locacao locacao) {
 		List<LocacaoTemFilme> locacaoTemFilmes = locacao.getFilmes();
 		this.setInformacoesVazias(locacao);
 		Locacao locacaoSalva = this.locacaoRepository.save(locacao);
-		this.locacaoTemFilmeService.criar(locacaoSalva, locacaoTemFilmes);
+		locacaoTemFilmes = this.locacaoTemFilmeService.criar(locacaoSalva, locacaoTemFilmes);
+		locacaoSalva.setFilmes(locacaoTemFilmes);
 		this.setInformacoesPreenchidas(locacaoSalva);
-		this.locacaoRepository.save(locacaoSalva);
+		locacaoSalva = this.atualizar(locacaoSalva.getId(), locacaoSalva);
 		return locacaoSalva;
 		
 	}
 	
+	public Locacao atualizar(int id, Locacao locacao) {
+		Locacao locacaoSalva = this.buscarPorId(id);
+		BeanUtils.copyProperties(locacao, locacaoSalva, "id");
+		return this.locacaoRepository.save(locacaoSalva);
+	}
 	
 	
 	private void setInformacoesVazias(Locacao locacao) {
@@ -63,6 +92,7 @@ public class LocacaoService {
 		locacao.setDataDevolucao(null);
 		locacao.setValorTotal(null);
 		locacao.setFilmes(null);
+		locacao.setStatusLocacao(StatusLocacao.ABERTO);
 	}
 	
 	private void setInformacoesPreenchidas(Locacao locacao) {

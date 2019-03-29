@@ -73,16 +73,14 @@ public class LocacaoTemFilmeId implements Serializable {
 	public void setLocacaoId(Integer locacaoId) {
 		this.locacaoId = locacaoId;
 	}
-
+	
 	public Integer getFilmeId() {
 		return filmeId;
 	}
-
 	public void setFilmeId(Integer filmeId) {
 		this.filmeId = filmeId;
 	}
-	
-	
+
 
 	
 }
