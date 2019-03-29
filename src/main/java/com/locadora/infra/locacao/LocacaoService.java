@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.locadora.infra.cliente.Cliente;
 import com.locadora.infra.cliente.ClienteService;
-import com.locadora.infra.enums.Status;
+import com.locadora.infra.enums.StatusLocacao;
 
 /**
  * Classe responsável pelas regras de negocios atribuidos a {@link Locacao}
@@ -25,6 +25,9 @@ public class LocacaoService {
 	@Autowired
 	private ClienteService clienteService;
 	
+	@Autowired
+	private LocacaoTemFilmeService locacaoTemFilmeService;
+	
 	public List<Locacao> listarTodos(){
 		return this.locacaoRepository.findAll();
 	}
@@ -37,21 +40,49 @@ public class LocacaoService {
 		return locacaoSalva;
 	}
 	
-	public List<Locacao> buscarPosStatus(Status status){
+	/*public List<Locacao> listarPorStatus(StatusLocacao status){
 		List<Locacao> listaLocacoes = this.locacaoRepository.findByStatus(status);
 		return listaLocacoes;
+	}*/
+	
+	public Locacao criar(Locacao locacao) {
+		List<LocacaoTemFilme> locacaoTemFilmes = locacao.getFilmes();
+		this.setInformacoesVazias(locacao);
+		Locacao locacaoSalva = this.locacaoRepository.save(locacao);
+		this.locacaoTemFilmeService.criar(locacaoSalva, locacaoTemFilmes);
+		this.setInformacoesPreenchidas(locacaoSalva);
+		this.locacaoRepository.save(locacaoSalva);
+		return locacaoSalva;
+		
 	}
 	
 	
 	
-	public Long totDias(LocalDate dataInicio, LocalDate dataFim) {
-		Long totDias = 	ChronoUnit.DAYS.between(dataInicio, dataFim);
+	private void setInformacoesVazias(Locacao locacao) {
+		locacao.setDataRealizacao(LocalDate.now());
+		locacao.setDataDevolucao(null);
+		locacao.setValorTotal(null);
+		locacao.setFilmes(null);
+	}
+	
+	private void setInformacoesPreenchidas(Locacao locacao) {
+		locacao.setDataRealizacao(LocalDate.now());
+		locacao.setDataDevolucao(totDias(LocalDate.now()));
+		locacao.setValorTotal(calcValorTotal(locacao));
 		
-		return totDias;
+	}
+	private LocalDate totDias(LocalDate dataInicio) {
+		LocalDate novaData = dataInicio.plus(5, ChronoUnit.DAYS);
+		return novaData;
 	}
 
-	public Double calcValorTotal(Long totDias, Double valorDiaria) {
-		return (totDias * valorDiaria);
+	private Double calcValorTotal(Locacao locacao) {
+		Double valorTotal = 0.0;
+		for(int i=0; i<locacao.getFilmes().size();i++) {
+			valorTotal+= locacao.getFilmes().get(i).getVlrTotal();
+		}
+		
+		return valorTotal*5;
 	}
 
 

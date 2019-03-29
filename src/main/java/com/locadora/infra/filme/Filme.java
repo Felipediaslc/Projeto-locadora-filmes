@@ -1,5 +1,9 @@
 package com.locadora.infra.filme;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,11 +11,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.locadora.infra.genero.Genero;
+import com.locadora.infra.locacao.LocacaoTemFilme;
 
 /**
  * Classe Modelo de filme para manipulação do banco de dados
@@ -55,26 +61,116 @@ public class Filme {
 	@JoinColumn(name="GENERO_ID")
 	private Genero genero;
 
+	@OneToMany(mappedBy = "locacao",cascade = CascadeType.ALL,orphanRemoval = true)
+	    private List<LocacaoTemFilme> locacoes = new ArrayList<>();
 	
 	
 	public Filme(String titulo,  Integer duracao,  Double valorDiaria,
-			 Integer qtEstoque, String sinopse, Genero genero, String nomeDiretor) {
+			 Integer qtEstoque,  String nomeDiretor,  String sinopse, Genero genero,
+			List<LocacaoTemFilme> locacoes) {
 		super();
 		this.titulo = titulo;
 		this.duracao = duracao;
 		this.valorDiaria = valorDiaria;
 		this.qtEstoque = qtEstoque;
+		this.nomeDiretor = nomeDiretor;
 		this.sinopse = sinopse;
 		this.genero = genero;
-		this.nomeDiretor = nomeDiretor;
+		this.locacoes = locacoes;
 	}
-	
+
+
+
 	public Filme() {
 		
 	}
 	
 	
-	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((duracao == null) ? 0 : duracao.hashCode());
+		result = prime * result + ((genero == null) ? 0 : genero.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((locacoes == null) ? 0 : locacoes.hashCode());
+		result = prime * result + ((nomeDiretor == null) ? 0 : nomeDiretor.hashCode());
+		result = prime * result + ((qtEstoque == null) ? 0 : qtEstoque.hashCode());
+		result = prime * result + ((sinopse == null) ? 0 : sinopse.hashCode());
+		result = prime * result + ((titulo == null) ? 0 : titulo.hashCode());
+		result = prime * result + ((valorDiaria == null) ? 0 : valorDiaria.hashCode());
+		return result;
+	}
+
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Filme other = (Filme) obj;
+		if (duracao == null) {
+			if (other.duracao != null)
+				return false;
+		} else if (!duracao.equals(other.duracao))
+			return false;
+		if (genero == null) {
+			if (other.genero != null)
+				return false;
+		} else if (!genero.equals(other.genero))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (locacoes == null) {
+			if (other.locacoes != null)
+				return false;
+		} else if (!locacoes.equals(other.locacoes))
+			return false;
+		if (nomeDiretor == null) {
+			if (other.nomeDiretor != null)
+				return false;
+		} else if (!nomeDiretor.equals(other.nomeDiretor))
+			return false;
+		if (qtEstoque == null) {
+			if (other.qtEstoque != null)
+				return false;
+		} else if (!qtEstoque.equals(other.qtEstoque))
+			return false;
+		if (sinopse == null) {
+			if (other.sinopse != null)
+				return false;
+		} else if (!sinopse.equals(other.sinopse))
+			return false;
+		if (titulo == null) {
+			if (other.titulo != null)
+				return false;
+		} else if (!titulo.equals(other.titulo))
+			return false;
+		if (valorDiaria == null) {
+			if (other.valorDiaria != null)
+				return false;
+		} else if (!valorDiaria.equals(other.valorDiaria))
+			return false;
+		return true;
+	}
+
+
+
+	public List<LocacaoTemFilme> getLocacoes() {
+		return locacoes;
+	}
+
+	public void setLocacoes(List<LocacaoTemFilme> locacoes) {
+		this.locacoes = locacoes;
+	}
+
 	public Integer getId() {
 		return id;
 	}

@@ -64,6 +64,12 @@ public class FilmeService {
 		return filmeExistente.get();
 	}
 	
+	public Filme buscarPorId(Integer id) {
+		Optional<Filme> filmeEncontrado = this.filmeRepository.findById(id);
+		
+		return filmeEncontrado.get();
+	}
+	
 	/**
 	 * Metodo responsavel por criar um {@link Filme} e adiciona-lo ao banco de dados.
 	 * @param filme

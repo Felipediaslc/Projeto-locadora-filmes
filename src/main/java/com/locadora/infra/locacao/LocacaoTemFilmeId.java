@@ -13,25 +13,28 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class LocacaoTemFilmeId implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Column(name="LOCACAO_ID")
 	private Integer locacaoId;
 	
 	@Column(name = "FILME_ID")
 	private Integer filmeId;
-	
-	
 
+	
+	
 	public LocacaoTemFilmeId(Integer locacaoId, Integer filmeId) {
 		super();
 		this.locacaoId = locacaoId;
 		this.filmeId = filmeId;
 	}
-	
-	public LocacaoTemFilmeId() {
+	public LocacaoTemFilmeId(){
 		
 	}
 
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -78,6 +81,8 @@ public class LocacaoTemFilmeId implements Serializable {
 	public void setFilmeId(Integer filmeId) {
 		this.filmeId = filmeId;
 	}
-		
+	
+	
+
 	
 }

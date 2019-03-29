@@ -1,7 +1,10 @@
 package com.locadora.infra.locacao;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -11,10 +14,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.locadora.infra.cliente.Cliente;
-import com.locadora.infra.enums.Status;
+import com.locadora.infra.enums.StatusLocacao;
 
 
 /**
@@ -46,24 +50,26 @@ public class Locacao {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "STATUS")
-	private Status status;
+	private StatusLocacao statusLocacao;
 
+	@OneToMany(mappedBy = "filme",cascade = CascadeType.ALL,orphanRemoval = true )
+	private List<LocacaoTemFilme> filmes = new ArrayList<>();
 	
-	public Locacao(LocalDate dataRealizacao, LocalDate dataDevolucao, Double valorTotal, Cliente cliente,
-			Status status) {
+	
+	public Locacao(LocalDate dataRealizacao, LocalDate dataDevolucao, Double valorTotal, Cliente cliente, StatusLocacao statusLocacao,
+			List<LocacaoTemFilme> filmes) {
 		super();
 		this.dataRealizacao = dataRealizacao;
 		this.dataDevolucao = dataDevolucao;
 		this.valorTotal = valorTotal;
 		this.cliente = cliente;
-		this.status = status;
+		this.statusLocacao = statusLocacao;
+		this.filmes = filmes;
 	}
 
 	public Locacao() {
 
 	}
-
-	
 
 	@Override
 	public int hashCode() {
@@ -72,11 +78,14 @@ public class Locacao {
 		result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
 		result = prime * result + ((dataDevolucao == null) ? 0 : dataDevolucao.hashCode());
 		result = prime * result + ((dataRealizacao == null) ? 0 : dataRealizacao.hashCode());
+		result = prime * result + ((filmes == null) ? 0 : filmes.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		result = prime * result + ((statusLocacao == null) ? 0 : statusLocacao.hashCode());
 		result = prime * result + ((valorTotal == null) ? 0 : valorTotal.hashCode());
 		return result;
 	}
+
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -102,12 +111,17 @@ public class Locacao {
 				return false;
 		} else if (!dataRealizacao.equals(other.dataRealizacao))
 			return false;
+		if (filmes == null) {
+			if (other.filmes != null)
+				return false;
+		} else if (!filmes.equals(other.filmes))
+			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (status != other.status)
+		if (statusLocacao != other.statusLocacao)
 			return false;
 		if (valorTotal == null) {
 			if (other.valorTotal != null)
@@ -115,6 +129,23 @@ public class Locacao {
 		} else if (!valorTotal.equals(other.valorTotal))
 			return false;
 		return true;
+	}
+
+
+
+	public StatusLocacao getStatus() {
+		return statusLocacao;
+	}
+	public void setStatus(StatusLocacao status) {
+		this.statusLocacao = status;
+	}
+
+	public List<LocacaoTemFilme> getFilmes() {
+		return filmes;
+	}
+
+	public void setFilmes(List<LocacaoTemFilme> filmes) {
+		this.filmes = filmes;
 	}
 
 	public Integer getId() {
@@ -157,12 +188,12 @@ public class Locacao {
 		this.cliente = cliente;
 	}
 
-	public Status getstatus() {
-		return status;
+	public StatusLocacao getStatuLocacao() {
+		return statusLocacao;
 	}
 
-	public void setstatus(Status status) {
-		this.status = status;
+	public void setStatusLocacao(StatusLocacao status) {
+		this.statusLocacao = status;
 	}
 
 }
