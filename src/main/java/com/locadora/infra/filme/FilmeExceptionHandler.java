@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.locadora.handler.Erro;
 import com.locadora.infra.filme.exception.FilmeDuplicadoException;
 import com.locadora.infra.filme.exception.FilmeNaoEncontradoException;
+import com.locadora.infra.filme.exception.FilmeSemEstoqueException;
 /**
  * Classe responsavel por tratar os erros especificos a {@link Filme}
  * @author SOUSA, Taynar - Marco/2019
@@ -27,7 +28,7 @@ import com.locadora.infra.filme.exception.FilmeNaoEncontradoException;
 public class FilmeExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@Autowired
-	MessageSource messageSource;
+	private MessageSource messageSource;
 	
 	@ExceptionHandler({FilmeNaoEncontradoException .class })
 	public ResponseEntity<Object> handleDataIntegrityViolationException(FilmeNaoEncontradoException ex,
@@ -44,8 +45,18 @@ public class FilmeExceptionHandler extends ResponseEntityExceptionHandler {
 			WebRequest request) {
 		String mensagemUsr = messageSource.getMessage("filme.duplicado", null,
 				LocaleContextHolder.getLocale());
-		String mensagemDev = ExceptionUtils.getRootCauseMessage(ex);
+		String mensagemDev = ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsr, mensagemDev));
-		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+	
+	@ExceptionHandler({FilmeSemEstoqueException .class })
+	public ResponseEntity<Object> handleDataIntegrityViolationException(FilmeSemEstoqueException ex,
+			WebRequest request) {
+		String mensagemUsr = messageSource.getMessage("filme.sem-estoque", null,
+				LocaleContextHolder.getLocale());
+		String mensagemDev = ex.toString();
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsr, mensagemDev));
+		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 }

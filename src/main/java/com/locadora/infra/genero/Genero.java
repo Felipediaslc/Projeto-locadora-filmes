@@ -29,7 +29,7 @@ public class Genero {
 
 	
 
-	public Genero(@NotNull String nome) {
+	public Genero(String nome) {
 		super();
 		this.nome = nome;
 	}

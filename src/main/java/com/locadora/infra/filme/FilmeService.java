@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.locadora.infra.filme.exception.FilmeDuplicadoException;
 import com.locadora.infra.filme.exception.FilmeNaoEncontradoException;
+import com.locadora.infra.filme.exception.FilmeSemEstoqueException;
 import com.locadora.infra.genero.Genero;
 import com.locadora.infra.genero.GeneroService;
 /**
@@ -20,17 +21,18 @@ import com.locadora.infra.genero.GeneroService;
 public class FilmeService {
 	
 	@Autowired
-	FilmeRepository filmeRepository;
+	private FilmeRepository filmeRepository;
 	
 	@Autowired
-	GeneroService generoService;
+	private GeneroService generoService;
 	/**
 	 * Metodo responsavel por listar todos os {@link Filme filmes} cadastrados
 	 * @see FilmeRepository
 	 * @return todos os {@link Filme filmes} cadastrados no banco
+	 * @since 1.0
 	 */
 	public List<Filme> listarTodos(){
-		return filmeRepository.findAll();
+		return this.filmeRepository.findAll();
 	}
 	
 	/**
@@ -41,12 +43,13 @@ public class FilmeService {
 	 * @see FilmeRepository
 	 * @see GeneroService
 	 * @return lista de {@link Filme filmes} de um determinado {@link Genero}.
+	 * @since 1.0
 	 */
-	public List<Filme> listarFilmePorGenero(String genero){
-		Genero generoFilmes = generoService.buscarPorNome(genero);
-		List<Filme> listaDeFilmes = filmeRepository.findFilmeByGenero(generoFilmes);
+	public List<Filme> listarPorGenero(String genero){
+		final Genero generoFilmes = this.generoService.buscarPorNome(genero);
+		final List<Filme> listaFilmes = this.filmeRepository.findFilmeByGenero(generoFilmes);
 		
-		return listaDeFilmes;
+		return listaFilmes;
 	}
 	
 	/**
@@ -54,9 +57,10 @@ public class FilmeService {
 	 * @param titulo
 	 * @see FilmeRepository
 	 * @return {@link Filme} que possui o titulo no qual foi buscado.
+	 * @since 1.0
 	 */
 	public Filme buscarPorTitulo(String titulo) {
-		Optional<Filme> filmeExistente =  filmeRepository.findByTitulo(titulo);
+		Optional<Filme> filmeExistente =  this.filmeRepository.findByTitulo(titulo);
 		if(!filmeExistente.isPresent()) {
 			throw new FilmeNaoEncontradoException();
 			}
@@ -75,44 +79,75 @@ public class FilmeService {
 	 * @param filme
 	 * @see FilmeRepository
 	 * @return {@link Filme} criado.
+	 * @since 1.0
 	 */
 	public Filme criar(Filme filme) {
+		
 		if(filmeExiste(filme.getTitulo())) {
 			throw new FilmeDuplicadoException();
 		}
-		Filme filmeSalvo = filmeRepository.save(filme);
+		final Filme filmeSalvo = this.filmeRepository.save(filme);
 		
 		return filmeSalvo;
 	}
-	
+	/**
+	 * Metodo responsavel por atualizar os dados de filme
+	 * @see FilmeRepository
+	 * @param titulo
+	 * @param filme
+	 * @return {@link Filme} atualizado.
+	 * @since 1.0
+	 */
 	public Filme atualizar(String titulo,Filme filme) {
-		Filme filmeSalvo = buscarPorTitulo(titulo);
+		final Filme filmeSalvo = this.buscarPorTitulo(titulo);
 		BeanUtils.copyProperties(filme, filmeSalvo, "id");
-		if(filmeExiste(filme.getTitulo())) {
+		if(this.filmeExiste(filme.getTitulo())) {
 			throw new FilmeDuplicadoException();
 		}
 		
+		return this.filmeRepository.save(filmeSalvo);
+	}
+	
+	/**
+	 * Metodo responsavel por atualizar a quantidade de {link Filme filmes} no estoque.
+	 * @see FilmeRepository
+	 * @param id
+	 * @param qtEstoque
+	 * @return {@link Filme} com estoque atualizado.
+	 */
+	public Filme atualizarEstoque(Integer id,Integer qtEstoque) {
+		Filme filmeSalvo = buscarPorId(id);
+		filmeSalvo.setQuantidadeEstoque(qtEstoque);
 		return filmeRepository.save(filmeSalvo);
 	}
 	
-	public Filme atualizarQtEstoque(String titulo,int qtEstoque) {
-		Filme filmeSalvo = buscarPorTitulo(titulo);
-		filmeSalvo.setQtEstoque(qtEstoque);
-		return filmeRepository.save(filmeSalvo);
-	}
-	
-	
-	public Filme atualizarValorDiaria(String titulo, double valor) {
-		Filme filmeSalvo = buscarPorTitulo(titulo);
+	/**
+	 * Metodo responsavel por atualizar o valor da diaria de determinado {@link Filme}
+	 * @see FilmeRepository
+	 * @param id
+	 * @param valor
+	 * @return {@link Filme} com o valor da diaria atualizado
+	 * @since 1.0
+	 */
+	public Filme atualizarValorDiaria(Integer id, double valor) {
+		Filme filmeSalvo = this.buscarPorId(id);
 		filmeSalvo.setValorDiaria(valor);
-		return filmeRepository.save(filmeSalvo);
+		return this.filmeRepository.save(filmeSalvo);
 	}
 	
-	public Filme atualizarGenero(String titulo, Genero genero) {
-		Filme filmeSalvo = buscarPorTitulo(titulo);
+	/**
+	 * Metodo responsavel por atualizar um {@link Genero} de um {@link Filme}
+	 * @see FilmeRepository
+	 * @param id
+	 * @param genero
+	 * @return {@link Filme} com o {@link Genero} atualizado
+	 */
+	public Filme atualizarGenero(Integer id, Genero genero) {
+		Filme filmeSalvo = this.buscarPorId(id);
 		filmeSalvo.setGenero(genero);
 		return filmeRepository.save(filmeSalvo);
 	}
+
 	
 	/**
 	 * Metodo responsavel por informar se o {@link Filme} existe a partir do titulo.
@@ -121,7 +156,7 @@ public class FilmeService {
 	 * @return false se {@link Filme} nao existir; true se {@link Filme} existe
 	 */
 	private boolean filmeExiste(String titulo) {
-		Optional<Filme> filmeExistente =  filmeRepository.findByTitulo(titulo);
+		Optional<Filme> filmeExistente =  this.filmeRepository.findByTitulo(titulo);
 		
 		return filmeExistente.isPresent();
 	}

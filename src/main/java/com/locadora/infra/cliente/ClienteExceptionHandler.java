@@ -47,6 +47,6 @@ public class ClienteExceptionHandler extends ResponseEntityExceptionHandler{
 				LocaleContextHolder.getLocale());
 		String mensagemDev = ExceptionUtils.getRootCauseMessage(ex);
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsr, mensagemDev));
-		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 }

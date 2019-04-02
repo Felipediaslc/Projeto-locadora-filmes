@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.locadora.infra.cliente.Cliente;
 import com.locadora.infra.enums.StatusLocacao;
 import com.locadora.infra.locacaoTemFilme.LocacaoTemFilme;
@@ -53,7 +54,8 @@ public class Locacao {
 	@Column(name = "STATUS")
 	private StatusLocacao statusLocacao;
 
-	@OneToMany(mappedBy = "filme",cascade = CascadeType.ALL,orphanRemoval = true )
+
+	@OneToMany(mappedBy = "filme",cascade = CascadeType.ALL)
 	private List<LocacaoTemFilme> filmes = new ArrayList<>();
 	
 	

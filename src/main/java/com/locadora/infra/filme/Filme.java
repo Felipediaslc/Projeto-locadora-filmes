@@ -1,9 +1,5 @@
 package com.locadora.infra.filme;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,13 +7,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.locadora.infra.genero.Genero;
-import com.locadora.infra.locacaoTemFilme.LocacaoTemFilme;
 
 /**
  * Classe Modelo de filme para manipulação do banco de dados
@@ -47,37 +41,34 @@ public class Filme {
 	
 	@NotNull
 	@Column(name = "QUANTIDADE_ESTOQUE")
-	private Integer qtEstoque;
+	private Integer quantidadeEstoque;
 	
 	@NotNull
 	@Column(name = "NOME_DIRETOR")
+	@Size(min =3, max=50)
 	private String nomeDiretor;
 	
 	@NotNull
 	@Column(name="SINOPSE")
+	@Size(min = 5, max = 150)
 	private String sinopse;
 	
 	@ManyToOne
 	@JoinColumn(name="GENERO_ID")
 	private Genero genero;
-	/*
-	@OneToMany(mappedBy = "locacao",cascade = CascadeType.ALL,orphanRemoval = true)
-	    private List<LocacaoTemFilme> locacoes = new ArrayList<>();*/
-	
+
 	
 	public Filme(String titulo,  Integer duracao,  Double valorDiaria,
-			 Integer qtEstoque,  String nomeDiretor,  String sinopse, Genero genero) {
+			 Integer quantidadeEstoque,  String nomeDiretor,  String sinopse, Genero genero) {
 		super();
 		this.titulo = titulo;
 		this.duracao = duracao;
 		this.valorDiaria = valorDiaria;
-		this.qtEstoque = qtEstoque;
+		this.quantidadeEstoque = quantidadeEstoque;
 		this.nomeDiretor = nomeDiretor;
 		this.sinopse = sinopse;
 		this.genero = genero;
 	}
-
-
 
 	public Filme() {
 		
@@ -92,7 +83,7 @@ public class Filme {
 		result = prime * result + ((genero == null) ? 0 : genero.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((nomeDiretor == null) ? 0 : nomeDiretor.hashCode());
-		result = prime * result + ((qtEstoque == null) ? 0 : qtEstoque.hashCode());
+		result = prime * result + ((quantidadeEstoque == null) ? 0 : quantidadeEstoque.hashCode());
 		result = prime * result + ((sinopse == null) ? 0 : sinopse.hashCode());
 		result = prime * result + ((titulo == null) ? 0 : titulo.hashCode());
 		result = prime * result + ((valorDiaria == null) ? 0 : valorDiaria.hashCode());
@@ -130,10 +121,10 @@ public class Filme {
 				return false;
 		} else if (!nomeDiretor.equals(other.nomeDiretor))
 			return false;
-		if (qtEstoque == null) {
-			if (other.qtEstoque != null)
+		if (quantidadeEstoque == null) {
+			if (other.quantidadeEstoque != null)
 				return false;
-		} else if (!qtEstoque.equals(other.qtEstoque))
+		} else if (!quantidadeEstoque.equals(other.quantidadeEstoque))
 			return false;
 		if (sinopse == null) {
 			if (other.sinopse != null)
@@ -193,12 +184,12 @@ public class Filme {
 		this.valorDiaria = valorDiaria;
 	}
 
-	public Integer getQtEstoque() {
-		return qtEstoque;
+	public Integer getQuantidadeEstoque() {
+		return quantidadeEstoque;
 	}
 
-	public void setQtEstoque(Integer qtEstoque) {
-		this.qtEstoque = qtEstoque;
+	public void setQuantidadeEstoque(Integer quantidadeEstoque) {
+		this.quantidadeEstoque = quantidadeEstoque;
 	}
 
 	public String getSinopse() {

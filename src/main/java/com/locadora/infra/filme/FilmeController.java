@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 /**
- * Controller de {@link Filme} para configuração das rotas
+ * Controller de {@link Filme} para configuracao das rotas
  * @author SOUSA, Taynar - Marco/2019
  * @since 1.0
  */
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class FilmeController {
 
 	@Autowired
-	FilmeService filmeService;
+	private FilmeService filmeService;
 	
 	/**
 	 * Metodo que  retorna no body todos os {@link Filme filmes} cadastrados
@@ -37,8 +37,8 @@ public class FilmeController {
 	 */
 	@GetMapping
 	public ResponseEntity<List<Filme>> listarTodos(){
-		List<Filme> listaDeFilme = filmeService.listarTodos();
-		return ResponseEntity.status(HttpStatus.OK).body(listaDeFilme);
+		final List<Filme> listaDeFilmes = this.filmeService.listarTodos();
+		return ResponseEntity.status(HttpStatus.OK).body(listaDeFilmes);
 	}
 	/**
 	 * Metodo que retorna no body um {@link Filme} atraves da busca feita a partir do titulo
@@ -49,7 +49,7 @@ public class FilmeController {
 	 */
 	@GetMapping("/{titulo}")
 	public ResponseEntity<Filme> buscarPorTitulo(@PathVariable("titulo") String titulo){
-		Filme filmeEncontrado = filmeService.buscarPorTitulo(titulo);
+		final Filme filmeEncontrado = this.filmeService.buscarPorTitulo(titulo);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(filmeEncontrado);
 		
@@ -62,10 +62,10 @@ public class FilmeController {
 	 * @since 1.0
 	 */
 	@GetMapping("/genero/{genero}")
-	public ResponseEntity<List<Filme>> buscarPorGenero(@PathVariable("genero") String genero){
-		List<Filme> filmeEncontrado = filmeService.listarFilmePorGenero(genero);
+	public ResponseEntity<List<Filme>> listarPorGenero(@PathVariable("genero") String genero){
+		final List<Filme> filmesEncontrados = this.filmeService.listarPorGenero(genero);
 		
-		return ResponseEntity.status(HttpStatus.OK).body(filmeEncontrado);
+		return ResponseEntity.status(HttpStatus.OK).body(filmesEncontrados);
 	}
 	
 	/**
@@ -77,7 +77,7 @@ public class FilmeController {
 	 */
 	@PostMapping
 	public ResponseEntity<Filme> criar(@Valid @RequestBody Filme filme){
-		Filme filmeCriado = filmeService.criar(filme);
+		final Filme filmeCriado = this.filmeService.criar(filme);
 		return ResponseEntity.status(HttpStatus.CREATED).body(filmeCriado);
 	}
 	
@@ -91,7 +91,7 @@ public class FilmeController {
 	 */
 	@PutMapping
 	public ResponseEntity<Filme> atualizar(@PathVariable String titulo, @Valid @RequestBody Filme filme){
-		Filme filmeAtualizado = filmeService.atualizar(titulo, filme);
+		final Filme filmeAtualizado = this.filmeService.atualizar(titulo, filme);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(filmeAtualizado);
 	}
 	
@@ -103,9 +103,9 @@ public class FilmeController {
 	 * @return {@link HttpStatus.NO_CONTENT} 
 	 * @since 1.0
 	 */
-	@PutMapping("/qtEstoque/{titulo}")
-	public ResponseEntity<Filme> atualizarQtEstoque(@PathVariable String titulo, @Valid @RequestBody int qtEstoque){
-		Filme filmeAtualizado = filmeService.atualizarQtEstoque(titulo, qtEstoque);
+	@PutMapping("/estoque/{id}")
+	public ResponseEntity<Filme> atualizarEstoque(@PathVariable Integer  id, @Valid @RequestBody Integer qtEstoque){
+		 final Filme filmeAtualizado = this.filmeService.atualizarEstoque(id, qtEstoque);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(filmeAtualizado);
 	}
 	
@@ -117,9 +117,9 @@ public class FilmeController {
 	 * @return {@link HttpStatus.NO_CONTENT}
 	 * @since 1.0 
 	 */
-	@PutMapping("/valorDiaria/{titulo}")
-	public ResponseEntity<Filme> atualizarValorDiaria(@PathVariable String titulo, @Valid @RequestBody double valorDiaria){
-		Filme filmeAtualizado = filmeService.atualizarValorDiaria(titulo, valorDiaria);
+	@PutMapping("/valorDiaria/{id}")
+	public ResponseEntity<Filme> atualizarValorDiaria(@PathVariable Integer id, @Valid @RequestBody double valorDiaria){
+		final Filme filmeAtualizado = this.filmeService.atualizarValorDiaria(id, valorDiaria);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(filmeAtualizado);
 	}
 }

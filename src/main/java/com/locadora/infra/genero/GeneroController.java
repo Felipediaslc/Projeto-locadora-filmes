@@ -39,7 +39,7 @@ public class GeneroController {
 	}
 	
 	@GetMapping("/{nome}")
-	public ResponseEntity<Genero> listarPorNome(@PathVariable("nome") String nome){
+	public ResponseEntity<Genero> buscarPorNome(@PathVariable("nome") String nome){
 		Genero genero = generoService.buscarPorNome(nome);
 		return ResponseEntity.status(HttpStatus.OK).body(genero);
 	}
@@ -61,10 +61,10 @@ public class GeneroController {
 	 * @param genero
 	 * @return
 	 */
-	@PutMapping("/{nome}")
-	public ResponseEntity<Genero> criar(@PathVariable("nome") String nome,@Valid @RequestBody Genero genero){
-		Genero generoSalvo = generoService.atualizar(nome,genero);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(generoSalvo);
+	@PutMapping("/{id}")
+	public ResponseEntity<Genero> atualizar(@PathVariable Integer id,@Valid @RequestBody Genero genero){
+		Genero generoSalvo = generoService.atualizar(id,genero);
+		return ResponseEntity.status(HttpStatus.OK).body(generoSalvo);
 	}
 	
 }

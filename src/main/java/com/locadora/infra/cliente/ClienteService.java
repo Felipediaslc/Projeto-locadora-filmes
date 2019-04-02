@@ -9,14 +9,13 @@ import org.springframework.stereotype.Service;
 
 import com.locadora.infra.cliente.exception.ClienteNaoEncontradoException;
 import com.locadora.infra.cliente.exception.CpfDuplicadoException;
-import com.locadora.infra.filme.Filme;
-import com.locadora.infra.filme.exception.FilmeDuplicadoException;
+import com.locadora.infra.endereco.Endereco;
 import com.locadora.utils.ClienteUtils;
 
 /**
  * Classe responsavel pelos servicos e regras de negocios de {@link Cliente}
  * 
- * @author SOUSA, Taynar
+ * @author SOUSA, Taynar Marco/2019
  * @since 1.0
  */
 @Service
@@ -45,15 +44,29 @@ public class ClienteService {
 	 * @since 1.0
 	 */
 	public Cliente buscarPorCpf(String cpf) {
-		String cpfFormatado = ClienteUtils.validacpf(cpf);
+		String cpfFormatado = ClienteUtils.validaCpf(cpf);
 		if (!cpfExiste(cpfFormatado)) {
 			throw new ClienteNaoEncontradoException();
 		}
 
-		Optional<Cliente> clienteAserBuscado = this.clienteRepository.findByCpf(cpfFormatado);
-		return clienteAserBuscado.get();
+		Optional<Cliente> clienteSalvo = this.clienteRepository.findByCpf(cpfFormatado);
+		return clienteSalvo.get();
 
 	}
+	
+	/**
+	 * Metodo responsavel por buscar um {@link Cliente} a partir do id.
+	 * @see ClienteRepository
+	 * @param id
+	 * @return {@link Cliente} com o id informado.
+	 * @since 1.0
+	 */
+	public Cliente buscarporId(Integer id) {
+		Optional<Cliente> clienteSalvo = this.clienteRepository.findById(id);
+		if(clienteSalvo.isPresent()) {
+			throw new ClienteNaoEncontradoException();
+		}
+		return clienteSalvo.get();	}
 
 	/**
 	 * Metodo responsavel por criar um {@link Cliente} e adiciona-lo ao banco.
@@ -67,16 +80,23 @@ public class ClienteService {
 		if (cpfExiste(cliente.getCpf())) {
 			throw new CpfDuplicadoException();
 		}
-		setInformation(cliente);
+		setInformacao(cliente.getEndereco(),cliente);
 		Cliente clienteSalvo = this.clienteRepository.save(cliente);
 		return clienteSalvo;
 	}
-
-	public Cliente atualizar(String cpf, Cliente cliente) {
-		Cliente clienteSalvo = buscarPorCpf(cpf);
+	/**
+	 * Metodo responsavel por atualizar os dados do {@link Cliente}
+	 * @see ClienteRepository
+	 * @param id
+	 * @param cliente
+	 * @return {@link Cliente} atualizado
+	 * @since 1.0
+	 */
+	public Cliente atualizar(Integer id, Cliente cliente) {
+		Cliente clienteSalvo = buscarporId(id);
 
 		if (cpfExiste(cliente.getCpf())) {
-			if (cliente.getId() != cliente.getId()) {
+			if (cliente.getId() != clienteSalvo.getId()) {
 				throw new CpfDuplicadoException();
 			}
 		}
@@ -92,22 +112,23 @@ public class ClienteService {
 	 * @since 1.0
 	 */
 	private boolean cpfExiste(String cpf) {
-		Optional<Cliente> clienteExiste = this.clienteRepository.findByCpf(cpf);
-		return clienteExiste.isPresent();
+		Optional<Cliente> clienteSalvo = this.clienteRepository.findByCpf(cpf);
+		return clienteSalvo.isPresent();
 	}
 
 	/**
 	 * Metodo que faz a formatação do CEP e do CPF.
 	 * 
 	 * @see ClienteUtils
+	 * @param endereco
 	 * @param cliente
 	 * @since 1.0
 	 */
-	private void setInformation(Cliente cliente) {
-		String cepFormatado = ClienteUtils.validaCep(cliente.getCep());
-		String cpfFormatado = ClienteUtils.validacpf(cliente.getCpf());
+	private void setInformacao(Endereco endereco, Cliente cliente) {
+		String cepFormatado = ClienteUtils.validaCep(endereco.getCep());
+		String cpfFormatado = ClienteUtils.validaCpf(cliente.getCpf());
 
-		cliente.setCep(cepFormatado);
+		endereco.setCep(cepFormatado);
 		cliente.setCpf(cpfFormatado);
 	}
 }
