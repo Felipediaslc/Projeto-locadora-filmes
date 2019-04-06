@@ -2,8 +2,11 @@ package com.locadora.infra.endereco;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.locadora.infra.cliente.Cliente;
 /**
  * Classe Modelo de endereço do {@link Cliente}
  * 
@@ -13,16 +16,17 @@ import javax.validation.constraints.Size;
 @Embeddable
 public class Endereco {
 
-	@NotNull
+	@NotBlank
 	@Size(min = 8, max = 150)
 	@Column(name="RUA")
 	private String rua;
 	
-	@NotNull
+	@NotBlank
 	@Column(name="CEP")
+	@Size(min = 8, max = 9)
 	private String cep;
 	
-	@NotNull
+	@NotBlank
 	@Size(min = 4, max = 150)
 	@Column(name = "BAIRRO")
 	private String bairro;
@@ -31,7 +35,7 @@ public class Endereco {
 	@Column(name="COMPLEMENTO")
 	private String complemento;
 	
-	@NotNull
+	@NotBlank
 	@Size(min = 3, max = 50)
 	@Column(name="CIDADE")
 	private String cidade;
@@ -45,6 +49,9 @@ public class Endereco {
 		this.bairro = bairro;
 		this.complemento = complemento;
 		this.cidade = cidade;
+	}
+	public Endereco() {
+		
 	}
 
 	public String getRua() {

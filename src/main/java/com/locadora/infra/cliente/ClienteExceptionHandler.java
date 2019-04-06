@@ -25,28 +25,41 @@ import com.locadora.infra.cliente.exception.CpfDuplicadoException;
  * @since 1.0
  */
 @ControllerAdvice
-public class ClienteExceptionHandler extends ResponseEntityExceptionHandler{
+public class ClienteExceptionHandler {
 
 	@Autowired
-	MessageSource messageSource;
-	
-	@ExceptionHandler({ClienteNaoEncontradoException .class })
-	public ResponseEntity<Object> handleDataIntegrityViolationException(ClienteNaoEncontradoException ex,
+	private MessageSource messageSource;
+	/**
+	 * Tratamento de excecao quando os dados de algum cliente nformado nao e encontrado no banco.
+	 * @see MessageSource
+	 * @param ex
+	 * @param request
+	 * @return ResponseEntity.badRequest
+	 */
+	@ExceptionHandler({ClienteNaoEncontradoException.class })
+	public ResponseEntity<Object> handleClienteNaoEncontradoException(ClienteNaoEncontradoException ex,
 			WebRequest request) {
 		String mensagemUsr = messageSource.getMessage("cliente.nao-encontrado", null,
 				LocaleContextHolder.getLocale());
-		String mensagemDev = ExceptionUtils.getRootCauseMessage(ex);
+		String mensagemDev = ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsr, mensagemDev));
-		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+		return ResponseEntity.badRequest().body(erros) ;
 	}
 	
-	@ExceptionHandler({CpfDuplicadoException .class })
-	public ResponseEntity<Object> handleDataIntegrityViolationException(CpfDuplicadoException ex,
+	/**
+	 * Tratamento de excecao quando o usuario quer cadastrar um cpf ja cadastrado
+	 * @see MessageSource
+	 * @param ex
+	 * @param request
+	 * @return ResponseEntity.badRequest
+	 */
+	@ExceptionHandler({CpfDuplicadoException.class })
+	public ResponseEntity<Object> handleCpfDuplicadoException(CpfDuplicadoException ex,
 			WebRequest request) {
 		String mensagemUsr = messageSource.getMessage("cliente.duplicado", null,
 				LocaleContextHolder.getLocale());
-		String mensagemDev = ExceptionUtils.getRootCauseMessage(ex);
+		String mensagemDev = ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsr, mensagemDev));
-		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+		return ResponseEntity.badRequest().body(erros);
 	}
 }

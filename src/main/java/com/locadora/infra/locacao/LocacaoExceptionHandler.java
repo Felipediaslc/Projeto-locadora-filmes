@@ -23,18 +23,18 @@ import com.locadora.infra.locacao.exceptions.LocacaoNaoEncontradaException;
  * @since 1.0
  */
 @ControllerAdvice
-public class LocacaoExceptionHandler extends ResponseEntityExceptionHandler{
+public class LocacaoExceptionHandler {
 
 	@Autowired
 	MessageSource messageSource;
 	
 	@ExceptionHandler({LocacaoNaoEncontradaException .class })
-	public ResponseEntity<Object> handleDataIntegrityViolationException(LocacaoNaoEncontradaException ex,
+	public ResponseEntity<Object> handleLocacaoNaoEncontradaException(LocacaoNaoEncontradaException ex,
 			WebRequest request) {
 		String mensagemUsr = messageSource.getMessage("locacao.nao-encontrada", null,
 				LocaleContextHolder.getLocale());
-		String mensagemDev = ExceptionUtils.getRootCauseMessage(ex);
+		String mensagemDev = ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsr, mensagemDev));
-		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+		return ResponseEntity.badRequest().body(erros);
 	}
 }

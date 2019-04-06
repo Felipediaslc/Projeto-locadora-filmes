@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.locadora.infra.cliente.Cliente;
 import com.locadora.infra.cliente.ClienteService;
 import com.locadora.infra.enums.StatusLocacao;
+import com.locadora.infra.locacao.exceptions.LocacaoNaoEncontradaException;
 import com.locadora.infra.locacaoTemFilme.LocacaoTemFilme;
 import com.locadora.infra.locacaoTemFilme.LocacaoTemFilmeService;
 
@@ -31,6 +32,7 @@ public class LocacaoService {
 	
 	@Autowired
 	private LocacaoTemFilmeService locacaoTemFilmeService;
+	
 	
 	public List<Locacao> listarTodos(){
 		return this.locacaoRepository.findAll();
@@ -58,6 +60,13 @@ public class LocacaoService {
 		List<Locacao> listaLocacoes = this.locacaoRepository.findByStatusLocacao(status);
 		return listaLocacoes;
 	}
+	
+	public List<LocacaoTemFilme> listarFilmes(Integer idLocacao){
+		Locacao locacaoSalva = this.buscarPorId(idLocacao);
+		List<LocacaoTemFilme> listaFilmes = locacaoSalva.getFilmes();
+		return listaFilmes;
+	}
+	
 	/**
 	 * Metodo responsavel por buscar {@link Locacao} através do id informado.
 	 * @see LocacaoRepository
@@ -66,30 +75,67 @@ public class LocacaoService {
 	 */
 	public Locacao buscarPorId(int id) {
 		Optional<Locacao> locacao = this.locacaoRepository.findById(id);
+		if(!locacao.isPresent()) {
+			throw new LocacaoNaoEncontradaException();
+		}
 		
 		return locacao.get();
 	}
 	
-	
+	/**
+	 * Metodo responsavel por criar uma locacao e salvar no banco de dados
+	 * @see LocacaoRepository
+	 * @see LocacaoTemFilmeService
+	 * @param locacao
+	 * @return {@link Locacao} criada.
+	 */
 	public Locacao criar(Locacao locacao) {
 		List<LocacaoTemFilme> locacaoTemFilmes = locacao.getFilmes();
 		this.setInformacoesVazias(locacao);
 		Locacao locacaoSalva = this.locacaoRepository.save(locacao);
 		locacaoTemFilmes = this.locacaoTemFilmeService.criar(locacaoSalva, locacaoTemFilmes);
 		locacaoSalva.setFilmes(locacaoTemFilmes);
-		this.setInformacoesPreenchidas(locacaoSalva);
-		locacaoSalva = this.atualizar(locacaoSalva.getId(), locacaoSalva);
+		locacaoSalva = this.atualizarCriacao(locacaoSalva.getId(), locacaoSalva);
 		return locacaoSalva;
 		
 	}
 	
-	public Locacao atualizar(int id, Locacao locacao) {
+	/**
+	 * Metodo responsavel por atualizar a {@link Locacao} adicionando a lista de {@link LocacaoTemFilme}.
+	 * Esse metodo e utilizado apenas pelo metodo criar.
+	 * @see LocacaoRepository
+	 * @param id
+	 * @param locacao
+	 * @return {@link Locacao} atualizada
+	 */
+	public Locacao atualizarCriacao(int id, Locacao locacao) {
 		Locacao locacaoSalva = this.buscarPorId(id);
 		BeanUtils.copyProperties(locacao, locacaoSalva, "id");
 		return this.locacaoRepository.save(locacaoSalva);
 	}
 	
+	public Locacao devolver(int id) {
+		Locacao locacaoSalva = this.buscarPorId(id);
+		Locacao locacao = locacaoSalva;
+		this.setInformacoesDevolucao(locacao);
+		locacao.setValorTotal(valorFinal(locacao.getDataRealizacao(),locacao.getDataDevolucao(),locacao.getFilmes()));
+		this.atualizarEstoque(locacao.getFilmes());
+		BeanUtils.copyProperties(locacao, locacaoSalva, "id");
+		return this.locacaoRepository.save(locacaoSalva);
+	}
 	
+	
+	private void atualizarEstoque(List<LocacaoTemFilme> filmes) {
+		for(int i=0;i<filmes.size();i++) {
+			this.locacaoTemFilmeService.somaQuantidadeEstoque(filmes.get(i).getFilme(),filmes.get(i).getQuantidadeLocada());
+		}
+		
+	}
+	/**
+	 * Metodo responsavel por setar as informacoes vazias para salvar uma {@link Locacao}
+	 * 
+	 * @param locacao
+	 */
 	private void setInformacoesVazias(Locacao locacao) {
 		locacao.setDataRealizacao(LocalDate.now());
 		locacao.setDataDevolucao(null);
@@ -98,24 +144,40 @@ public class LocacaoService {
 		locacao.setStatusLocacao(StatusLocacao.ABERTO);
 	}
 	
-	private void setInformacoesPreenchidas(Locacao locacao) {
-		locacao.setDataRealizacao(LocalDate.now());
-		locacao.setDataDevolucao(totDias(LocalDate.now()));
-		locacao.setValorTotal(calcValorTotal(locacao));
+	/**
+	 * Metodo que seta informacoes adicionais para salvar uma {@link Locacao}
+	 * @param locacao
+	 */
+	private void setInformacoesDevolucao(Locacao locacao) {
+		locacao.setDataDevolucao(LocalDate.now());
+		locacao.setStatusLocacao(StatusLocacao.DEVOLVIDO);
 		
 	}
-	private LocalDate totDias(LocalDate dataInicio) {
-		LocalDate novaData = dataInicio.plus(5, ChronoUnit.DAYS);
-		return novaData;
+	/**
+	 * Metodo responsavel por  calcular o total de dias desde a data da realizacao da locacao ate a devolucao.
+	 * 
+	 * @param dataInicio
+	 * @return Total de dias da locacao.
+	 */
+	private Double valorFinal(LocalDate dataInicio, LocalDate dataDevolucao, List<LocacaoTemFilme> filmes) {
+		Integer totalDias = (int) ChronoUnit.DAYS.between(dataInicio, dataDevolucao);
+		Double valorFinal = this.calcularValorTodasDiarias(filmes)*totalDias;
+		return valorFinal;
 	}
 
-	private Double calcValorTotal(Locacao locacao) {
-		Double valorTotal = 0.0;
-		for(int i=0; i<locacao.getFilmes().size();i++) {
-			valorTotal+= locacao.getFilmes().get(i).getVlrTotal();
+	/**
+	 * Metodo que calcula o valor total a ser pago pela {@link Locacao}
+	 * @param locacao
+	 * @return Valor total a ser pago pela {@link Locacao}
+	 */
+	private Double calcularValorTodasDiarias(List<LocacaoTemFilme> filmes) {
+		Double valorTotalDiarias = 0.0;
+		for(int i=0; i<filmes.size();i++) {
+			valorTotalDiarias+= filmes.get(i).getVlrTotalDiaria();
+			System.out.println(valorTotalDiarias);
 		}
-		
-		return valorTotal*5;
+		//System.out.println(valorTotalDiarias);
+		return valorTotalDiarias;
 	}
 
 

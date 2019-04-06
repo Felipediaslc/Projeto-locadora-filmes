@@ -25,29 +25,29 @@ import com.locadora.infra.genero.exception.GeneroNaoEncontradoException;
  * @since 1.0
  */
 @ControllerAdvice
-public class GeneroExceptionHandler extends ResponseEntityExceptionHandler{
+public class GeneroExceptionHandler{
 	
 	@Autowired
 	MessageSource messageSource;
 	
 	@ExceptionHandler({GeneroNaoEncontradoException .class })
-	public ResponseEntity<Object> handleDataIntegrityViolationException(GeneroNaoEncontradoException ex,
+	public ResponseEntity<Object> handleGeneroNaoEncontradoException(GeneroNaoEncontradoException ex,
 			WebRequest request) {
 		String mensagemUsr = messageSource.getMessage("genero.nao-encontrado", null,
 				LocaleContextHolder.getLocale());
-		String mensagemDev = ExceptionUtils.getRootCauseMessage(ex);
+		String mensagemDev = ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsr, mensagemDev));
-		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+		return ResponseEntity.badRequest().body(erros);
 	}
 	
 	@ExceptionHandler({GeneroDuplicadoException .class })
-	public ResponseEntity<Object> handleDataIntegrityViolationException(GeneroDuplicadoException ex,
+	public ResponseEntity<Object> handleGeneroNaoEncontradoException(GeneroDuplicadoException ex,
 			WebRequest request) {
 		String mensagemUsr = messageSource.getMessage("genero.duplicado", null,
 				LocaleContextHolder.getLocale());
-		String mensagemDev = ExceptionUtils.getRootCauseMessage(ex);
+		String mensagemDev = ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsr, mensagemDev));
-		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+		return ResponseEntity.badRequest().body(erros);
 	}
 	
 }

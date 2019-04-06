@@ -17,13 +17,12 @@ public class ClienteUtils {
 	
 	public static String validaCep(String cep) {
 		String cepFormatado = "";
-		if (cep.matches("\\d{2}.\\d{3}-\\d{3}")) {
+		if (cep.matches("\\d{2}\\d{3}-\\d{3}")) {
 			cepFormatado =  cep;
 		}
 		cepFormatado = cepFormatado.replace("-", "");
-		cepFormatado = cepFormatado.substring(0, 2) 
-				+ "." + cepFormatado.substring(2, 5) 
-				+ "-" + cepFormatado.substring(5, 8);
+		cepFormatado = cepFormatado.substring(0, 4)	+
+				"-" + cepFormatado.substring(4, 7);
 		return cepFormatado;
 	}
 

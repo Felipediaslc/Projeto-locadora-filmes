@@ -43,11 +43,10 @@ public class GeneroService {
 	 * @since 1.0
 	 */
 	public Genero buscarPorNome(String nome) {
-
-		if (!generoExiste(nome)) {
+		Optional<Genero> generoSalvo = generoRepository.findByNome(nome);
+		if(!generoSalvo.isPresent()) {
 			throw new GeneroNaoEncontradoException();
 		}
-		Optional<Genero> generoSalvo = generoRepository.findByNome(nome);
 		return generoSalvo.get();
 	}
 
@@ -75,11 +74,11 @@ public class GeneroService {
 	 * @return {@link Genero} criado
 	 */
 	public Genero criar(Genero genero) {
-		if (generoExiste(genero.getNome())) {
+		if (generoExiste(genero)) {
 			throw new GeneroDuplicadoException();
 		}
-		generoRepository.save(genero);
-		return genero;
+		final Genero generoSalvo = generoRepository.save(genero);
+		return generoSalvo;
 	}
 
 	/**
@@ -93,7 +92,7 @@ public class GeneroService {
 	 */
 	public Genero atualizar(Integer id, Genero genero) {
 		Genero generoCadastrado = buscarPorId(id);
-		if (generoExiste(genero.getNome())) {
+		if (generoExiste(genero)) {
 			throw new GeneroDuplicadoException();
 		}
 		BeanUtils.copyProperties(genero, generoCadastrado, "id");
@@ -108,9 +107,9 @@ public class GeneroService {
 	 * @param nome
 	 * @return
 	 */
-	private boolean generoExiste(String nome) {
-		Optional<Genero> genero = generoRepository.findByNome(nome);
-		return genero.isPresent();
+	public boolean generoExiste(Genero genero ) {
+		Optional<Genero> generoSalvo = generoRepository.findByNome(genero.getNome());
+		return generoSalvo.isPresent();
 	}
 
 }

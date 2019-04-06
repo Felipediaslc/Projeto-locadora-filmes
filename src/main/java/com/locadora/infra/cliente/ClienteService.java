@@ -77,10 +77,10 @@ public class ClienteService {
 	 * @since 1.0
 	 */
 	public Cliente criar(Cliente cliente) {
+		setInformacao(cliente.getEndereco(),cliente);
 		if (cpfExiste(cliente.getCpf())) {
 			throw new CpfDuplicadoException();
 		}
-		setInformacao(cliente.getEndereco(),cliente);
 		Cliente clienteSalvo = this.clienteRepository.save(cliente);
 		return clienteSalvo;
 	}

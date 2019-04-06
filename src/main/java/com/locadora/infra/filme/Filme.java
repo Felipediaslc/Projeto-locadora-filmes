@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.locadora.infra.genero.Genero;
 
 /**
@@ -38,7 +39,7 @@ public class Filme {
 	@NotNull
 	@Column(name = "VALOR_DIARIA")
 	private Double valorDiaria;
-	
+
 	@NotNull
 	@Column(name = "QUANTIDADE_ESTOQUE")
 	private Integer quantidadeEstoque;
@@ -50,7 +51,7 @@ public class Filme {
 	
 	@NotNull
 	@Column(name="SINOPSE")
-	@Size(min = 5, max = 150)
+	@Size(min = 5, max = 300)
 	private String sinopse;
 	
 	@ManyToOne
@@ -183,7 +184,7 @@ public class Filme {
 	public void setValorDiaria(Double valorDiaria) {
 		this.valorDiaria = valorDiaria;
 	}
-
+	
 	public Integer getQuantidadeEstoque() {
 		return quantidadeEstoque;
 	}

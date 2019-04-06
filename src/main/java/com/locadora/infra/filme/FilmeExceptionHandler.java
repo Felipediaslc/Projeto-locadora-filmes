@@ -25,38 +25,38 @@ import com.locadora.infra.filme.exception.FilmeSemEstoqueException;
  *@since 1.0
  */
 @ControllerAdvice
-public class FilmeExceptionHandler extends ResponseEntityExceptionHandler {
+public class FilmeExceptionHandler {
 
 	@Autowired
 	private MessageSource messageSource;
 	
 	@ExceptionHandler({FilmeNaoEncontradoException .class })
-	public ResponseEntity<Object> handleDataIntegrityViolationException(FilmeNaoEncontradoException ex,
+	public ResponseEntity<Object>handleFilmeNaoEncontradoException(FilmeNaoEncontradoException ex,
 			WebRequest request) {
 		String mensagemUsr = messageSource.getMessage("filme.nao-encontrado", null,
 				LocaleContextHolder.getLocale());
-		String mensagemDev = ExceptionUtils.getRootCauseMessage(ex);
+		String mensagemDev = ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsr, mensagemDev));
-		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+		return ResponseEntity.badRequest().body(erros);
 	}
 	
 	@ExceptionHandler({FilmeDuplicadoException .class })
-	public ResponseEntity<Object> handleDataIntegrityViolationException(FilmeDuplicadoException ex,
+	public ResponseEntity<Object>handleDataIntegrityViolationException(FilmeDuplicadoException ex,
 			WebRequest request) {
 		String mensagemUsr = messageSource.getMessage("filme.duplicado", null,
 				LocaleContextHolder.getLocale());
 		String mensagemDev = ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsr, mensagemDev));
-		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+		return ResponseEntity.badRequest().body(erros);
 	}
 	
 	@ExceptionHandler({FilmeSemEstoqueException .class })
-	public ResponseEntity<Object> handleDataIntegrityViolationException(FilmeSemEstoqueException ex,
+	public ResponseEntity<Object> handleFilmeSemEstoqueException(FilmeSemEstoqueException ex,
 			WebRequest request) {
 		String mensagemUsr = messageSource.getMessage("filme.sem-estoque", null,
 				LocaleContextHolder.getLocale());
 		String mensagemDev = ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsr, mensagemDev));
-		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+		return ResponseEntity.badRequest().body(erros);
 	}
 }

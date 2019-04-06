@@ -30,18 +30,18 @@ public class LocacaoTemFilme {
     private Filme filme;
 	
 	@Column(name = "QUANTIDADE_LOCADA")
-	private Integer qtLocada;
+	private Integer quantidadeLocada;
 
 	@Column(name = "VALOR_TOTAL_DIARIA")
-	private Double vlrTotal;
+	private Double vlrTotalDiaria;
 
 	
 	
-	public LocacaoTemFilme( Locacao locacao, Filme filme, Integer qtLocada) {
+	public LocacaoTemFilme( Locacao locacao, Filme filme, Integer quantidadeLocada) {
 		
 		this.locacao = locacao;
 		this.filme = filme;
-		this.qtLocada = qtLocada;
+		this.quantidadeLocada = quantidadeLocada;
 		this.id = new LocacaoTemFilmeId(locacao.getId(), filme.getId());
 
 	}
@@ -78,20 +78,22 @@ public class LocacaoTemFilme {
 		this.filme = filme;
 	}
 
-	public Integer getQtLocada() {
-		return qtLocada;
+
+
+	public Integer getQuantidadeLocada() {
+		return quantidadeLocada;
 	}
 
-	public void setQtLocada(Integer qtLocada) {
-		this.qtLocada = qtLocada;
+	public void setQuantidadeLocada(Integer quantidadeLocada) {
+		this.quantidadeLocada = quantidadeLocada;
 	}
 
-	public Double getVlrTotal() {
-		return vlrTotal;
+	public Double getVlrTotalDiaria() {
+		return vlrTotalDiaria;
 	}
 
-	public void setVlrTotal(Double vlrTotal) {
-		this.vlrTotal = vlrTotal;
+	public void setVlrTotalDiaria(Double vlrTotalDiaria) {
+		this.vlrTotalDiaria = vlrTotalDiaria;
 	}
 	
 	
