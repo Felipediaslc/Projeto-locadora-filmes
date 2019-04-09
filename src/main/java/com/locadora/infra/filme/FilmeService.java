@@ -67,18 +67,20 @@ public class FilmeService {
 	 * @since 1.0
 	 */
 	public Filme buscarPorTitulo(String titulo) {
-		Optional<Filme> filmeExistente = this.filmeRepository.findByTitulo(titulo);
-		if (!filmeExistente.isPresent()) {
+		Optional<Filme> filmeSalvo = this.filmeRepository.findByTitulo(titulo);
+		if (!filmeSalvo.isPresent()) {
 			throw new FilmeNaoEncontradoException();
 		}
 
-		return filmeExistente.get();
+		return filmeSalvo.get();
 	}
 
 	public Filme buscarPorId(Integer id) {
-		Optional<Filme> filmeEncontrado = this.filmeRepository.findById(id);
-
-		return filmeEncontrado.get();
+		Optional<Filme> filmeSalvo = this.filmeRepository.findById(id);
+		if (!filmeSalvo.isPresent()) {
+			throw new FilmeNaoEncontradoException();
+		}
+		return filmeSalvo.get();
 	}
 
 	/**

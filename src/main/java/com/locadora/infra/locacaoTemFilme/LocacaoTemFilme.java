@@ -15,7 +15,6 @@ import com.locadora.infra.locacao.Locacao;
 
 @Entity
 @Table(name = "locacao_tem_filme")
-
 public class LocacaoTemFilme {
 	
 	@EmbeddedId

@@ -13,6 +13,7 @@ import com.locadora.infra.cliente.Cliente;
 import com.locadora.infra.cliente.ClienteService;
 import com.locadora.infra.enums.StatusLocacao;
 import com.locadora.infra.locacao.exceptions.LocacaoNaoEncontradaException;
+import com.locadora.infra.locacao.filter.LocacaoFilter;
 import com.locadora.infra.locacaoTemFilme.LocacaoTemFilme;
 import com.locadora.infra.locacaoTemFilme.LocacaoTemFilmeService;
 
@@ -34,8 +35,8 @@ public class LocacaoService {
 	private LocacaoTemFilmeService locacaoTemFilmeService;
 	
 	
-	public List<Locacao> listarTodos(){
-		return this.locacaoRepository.findAll();
+	public List<Locacao> listarTodos(LocacaoFilter locacaoFilter){
+		return this.locacaoRepository.filtrar(locacaoFilter);
 	}
 	/**
 	 * Metodo responsavel por buscar locacoes de um determinado {@link Cliente}.
@@ -78,7 +79,7 @@ public class LocacaoService {
 		if(!locacao.isPresent()) {
 			throw new LocacaoNaoEncontradaException();
 		}
-		
+		System.out.println(locacao.get().getFilmes().get(0).getFilme().getTitulo());
 		return locacao.get();
 	}
 	
@@ -95,7 +96,9 @@ public class LocacaoService {
 		Locacao locacaoSalva = this.locacaoRepository.save(locacao);
 		locacaoTemFilmes = this.locacaoTemFilmeService.criar(locacaoSalva, locacaoTemFilmes);
 		locacaoSalva.setFilmes(locacaoTemFilmes);
+		System.out.println(locacaoSalva.getFilmes().get(0).getFilme().getTitulo());
 		locacaoSalva = this.atualizarCriacao(locacaoSalva.getId(), locacaoSalva);
+		System.out.println(locacaoSalva.getFilmes().get(0).getFilme().getTitulo());
 		return locacaoSalva;
 		
 	}

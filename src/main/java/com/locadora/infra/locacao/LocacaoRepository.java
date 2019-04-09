@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.locadora.infra.cliente.Cliente;
 import com.locadora.infra.enums.StatusLocacao;
+import com.locadora.infra.locacao.filter.LocacaoRepositoryQuery;
 
 
 
@@ -14,7 +15,7 @@ import com.locadora.infra.enums.StatusLocacao;
  * @author SOUSA, Taynar - Marco/2019
  * @since 1.0
  */
-public interface LocacaoRepository extends JpaRepository<Locacao, Integer>{
+public interface LocacaoRepository extends JpaRepository<Locacao, Integer>,LocacaoRepositoryQuery{
 
 		List<Locacao> findByCliente(Cliente cliente);
 		List<Locacao> findByStatusLocacao(StatusLocacao statusLocacao);

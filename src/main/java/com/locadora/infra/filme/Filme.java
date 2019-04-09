@@ -2,6 +2,7 @@ package com.locadora.infra.filme;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -54,7 +55,7 @@ public class Filme {
 	@Size(min = 5, max = 300)
 	private String sinopse;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="GENERO_ID")
 	private Genero genero;
 

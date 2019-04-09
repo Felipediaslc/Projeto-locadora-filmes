@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.locadora.infra.enums.StatusLocacao;
+import com.locadora.infra.locacao.filter.LocacaoFilter;
 import com.locadora.infra.locacaoTemFilme.LocacaoTemFilme;
 
 /**
@@ -32,8 +33,8 @@ public class LocacaoController {
 	
 	
 	@GetMapping
-	public ResponseEntity<List<Locacao>> listarTodos(){
-		List<Locacao> listaLocacao = this.locacaoService.listarTodos();
+	public ResponseEntity<List<Locacao>> listarTodos(LocacaoFilter locacaoFilter){
+		List<Locacao> listaLocacao = this.locacaoService.listarTodos(locacaoFilter);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(listaLocacao);
 	}
@@ -43,9 +44,17 @@ public class LocacaoController {
 		return ResponseEntity.status(HttpStatus.OK).body(listaFilmes);
 	}
 	
-	@GetMapping("/{cpf}")
+	@GetMapping("/cliente/{cpf}")
 	public ResponseEntity<List<Locacao>> buscarPorCliente(@PathVariable("cpf") String cpf){
 		List<Locacao> locacao = this.locacaoService.listarPorCliente(cpf);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(locacao);
+				
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Locacao> buscarPorId(@PathVariable Integer id){
+		Locacao locacao = this.locacaoService.buscarPorId(id);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(locacao);
 				
