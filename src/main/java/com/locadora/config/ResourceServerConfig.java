@@ -16,28 +16,22 @@ import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecur
 @Profile("authenticated")
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
-	
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		http.headers()
-		.frameOptions()
-		.disable()
-		.and()
-		.authorizeRequests()
-		.anyRequest().authenticated()
-		.and().sessionManagement()
-		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-		.and().csrf().disable();
+	    .frameOptions()
+	    .disable()
+	    	.and()
+	    		.authorizeRequests()
+	    		.anyRequest().authenticated()
+	    	.and()
+	    		.sessionManagement()
+	    		.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().csrf().disable();
 	}
 
+	
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
 		resources.stateless(true);
 	}
-	
-	/*@Bean
-	public MethodSecurityExpressionHandler createExpressionHandler() {
-		return new OAuth2MethodSecurityExpressionHandler();
-	}*/
-
 }

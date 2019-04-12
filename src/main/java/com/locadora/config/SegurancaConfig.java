@@ -14,8 +14,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 
 @EnableWebSecurity
 @EnableAuthorizationServer
-@EnableResourceServer
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableResourceServer@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SegurancaConfig extends WebSecurityConfigurerAdapter {
 
 	
@@ -35,7 +34,7 @@ public class SegurancaConfig extends WebSecurityConfigurerAdapter {
 	 */
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication().withUser("admin").password("admin").roles("ROLE");
+		auth.inMemoryAuthentication().withUser("admin").password("$2a$10$vVk0gvMuZksy8susXg6wleJf4cIaNj5zZ0Up7w1keF1rZZh86Yphq").roles("ROLE");
 	}
 
 
