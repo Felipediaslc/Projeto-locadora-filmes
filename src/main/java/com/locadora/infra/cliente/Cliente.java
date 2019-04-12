@@ -1,15 +1,19 @@
 package com.locadora.infra.cliente;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.br.CPF;
+
+import com.locadora.infra.endereco.Endereco;
 
 /**
  * Classe Modelo de clientes para manipulação do banco de dados.
@@ -26,51 +30,26 @@ public class Cliente {
 	private Integer id;
 	
 	@CPF
+	@NotBlank
 	@Column(name="CPF")
 	private  String cpf;
 	
-	@NotNull
+	@NotBlank
 	@Size(min = 3, max = 150)
 	@Column(name="NOME")
 	private String nome;
 	
-	@NotNull
-	@Size(min = 8, max = 150)
-	@Column(name="RUA")
-	private String rua;
-	
-	@NotNull
-	@Column(name="CEP")
-	private String cep;
-	
-	@NotNull
-	@Size(min = 4, max = 150)
-	@Column(name = "BAIRRO")
-	private String bairro;
-	
-	@Size(min = 3, max = 150)
-	@Column(name="COMPLEMENTO")
-	private String complemento;
-	
-	@NotNull
-	@Size(min = 3, max = 50)
-	@Column(name="CIDADE")
-	private String cidade;
+	@Embedded
+	private Endereco endereco;
 	
 	
 
-	public Cliente( String cpf,  String nome,
-			 String rua,  String cep, String bairro, String complemento,
-			 String cidade) {
-		super();
+	public Cliente(String cpf,String nome, Endereco endereco) {
 		this.cpf = cpf;
 		this.nome = nome;
-		this.rua = rua;
-		this.cep = cep;
-		this.bairro = bairro;
-		this.complemento = complemento;
-		this.cidade = cidade;
+		this.endereco = endereco;
 	}
+
 	public Cliente() {
 		
 	}
@@ -99,44 +78,12 @@ public class Cliente {
 		this.nome = nome;
 	}
 
-	public String getRua() {
-		return rua;
+	public Endereco getEndereco() {
+		return endereco;
 	}
 
-	public void setRua(String rua) {
-		this.rua = rua;
-	}
-
-	public String getCep() {
-		return cep;
-	}
-
-	public void setCep(String cep) {
-		this.cep = cep;
-	}
-
-	public String getBairro() {
-		return bairro;
-	}
-
-	public void setBairro(String bairro) {
-		this.bairro = bairro;
-	}
-
-	public String getComplemento() {
-		return complemento;
-	}
-
-	public void setComplemento(String complemento) {
-		this.complemento = complemento;
-	}
-
-	public String getCidade() {
-		return cidade;
-	}
-
-	public void setCidade(String cidade) {
-		this.cidade = cidade;
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
 	}
 	
 	

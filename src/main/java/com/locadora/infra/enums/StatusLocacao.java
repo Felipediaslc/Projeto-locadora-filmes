@@ -5,5 +5,5 @@ package com.locadora.infra.enums;
  * @since 1.0
  */
 public enum StatusLocacao {
- ABERTO,DEVOLVIDO
+		ABERTO,DEVOLVIDO
 }

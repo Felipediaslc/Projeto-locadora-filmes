@@ -1,5 +1,7 @@
 package com.locadora.infra.cliente;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -8,5 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since 1.0
  */
 public interface ClienteRepository extends JpaRepository<Cliente, Integer>{
-
+	Optional<Cliente> findByCpf(String cpf);
 }

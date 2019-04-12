@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Classe Modelo de genero para manipulacao do banco de dados
@@ -23,11 +24,12 @@ public class Genero {
 	
 	@NotNull
 	@Column(name = "NOME")
+	@Size(min=2,max=50)
 	private String nome;
 
 	
 
-	public Genero(@NotNull String nome) {
+	public Genero(String nome) {
 		super();
 		this.nome = nome;
 	}
@@ -84,5 +86,6 @@ public class Genero {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
+
+
 }
