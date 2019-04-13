@@ -34,7 +34,7 @@ public class Perfil {
 	@Size(min =3, max = 20)
 	private String nome;
 	
-	@Transient
+	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name="PERFIL_TEM_PERMISSAO", joinColumns = @JoinColumn(name="PERFIL_ID"), inverseJoinColumns = @JoinColumn(name = "PERMISSAO_ID"))
 	private List<Permissao> permissoes;
@@ -98,6 +98,14 @@ public class Perfil {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public List<Permissao> getPermissoes() {
+		return permissoes;
+	}
+
+	public void setPermissoes(List<Permissao> permissoes) {
+		this.permissoes = permissoes;
 	}
 	
 	

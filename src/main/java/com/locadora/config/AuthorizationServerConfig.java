@@ -25,7 +25,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory().withClient("locadora").scopes("read", "write").secret(passwordEncoder().encode("loc@dor@"))
-				.authorizedGrantTypes("password").accessTokenValiditySeconds(6000);
+				.authorizedGrantTypes("password","refresh_token").accessTokenValiditySeconds(20)
+				.refreshTokenValiditySeconds(3600*24);
 	}
 
 	@Bean
@@ -36,7 +37,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints.tokenStore(tokenStore()).accessTokenConverter(accessTokenConverter())
-				.authenticationManager(authenticationManager);
+				.authenticationManager(authenticationManager).reuseRefreshTokens(false);
 	}
 
 	@Bean

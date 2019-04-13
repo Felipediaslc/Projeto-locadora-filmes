@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -17,7 +18,10 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableResourceServer@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SegurancaConfig extends WebSecurityConfigurerAdapter {
 
-	
+	@Autowired
+	private UserDetailsService userDetailsService;
+	@Autowired
+	private AuthorizationServerConfig authorizationServerConfig;
 	/**
 	 * Metodo responsavel por autenticar o usuario desejado
 	 * @return Credenciais e permissoes do usuario
@@ -34,8 +38,8 @@ public class SegurancaConfig extends WebSecurityConfigurerAdapter {
 	 */
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication().withUser("admin").password("$2a$10$vVk0gvMuZksy8susXg6wleJf4cIaNj5zZ0Up7w1keF1rZZh86Yphq").roles("ROLE");
+		auth.userDetailsService(userDetailsService).passwordEncoder(this.authorizationServerConfig.passwordEncoder());
 	}
 
-
+	
 }
